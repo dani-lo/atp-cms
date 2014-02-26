@@ -1,14 +1,16 @@
 <!doctype html>
-<html lang="en" ng-app="myApp">
+<html lang="en" ng-app="app">
 <head>
   <meta charset="utf-8">
-  <title>My AngularJS App</title>
+  <title>ATP Cms</title>
+  <link rel="stylesheet" href="lib/bower_components/AngularJS-Toaster/toaster.css"/>
+  <link rel="stylesheet" href="lib/bower_components/bootstrap/dist/css/bootstrap.min.css"/>
   <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body>
-  <ul class="menu">
-    <li><a href="#/view1">view1</a></li>
-    <li><a href="#/view2">view2</a></li>
+  <ul class='menu main tabbed', ng-controller='NavCtrl')>
+    <li ng-class="{activetab: chekLocation('/home')}"><a href="#/home">home</a></li>
+    <li ng-class="{activetab: chekLocation('/users')}"><a href="#/users">users</a></li>
   </ul>
 
   <div ng-view></div>
@@ -18,8 +20,11 @@
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
   -->
-  <script src="lib/angular/angular.js"></script>
-  <script src="lib/angular/angular-route.js"></script>
+  <script src="lib/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="lib/angular/angular.min.js"></script>
+  <script src="lib/angular/angular-route.min.js"></script>
+  <script src="lib/bower_components/AngularJS-Toaster/toaster.js"></script>
+  <script src="lib/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="js/app.js"></script>
   <script src="js/services.js"></script>
   <script src="js/controllers.js"></script>

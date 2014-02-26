@@ -2,10 +2,31 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', []).
-  controller('MyCtrl1', [function() {
+angular.module('app.controllers', [])
+	/******************************************************************************
+  	//////////////////////////////////////////// NavCtrl
+  	******************************************************************************/
+	.controller('NavCtrl', ['$scope', '$location', function($scope, $location) {
+	//
+		//$scope.mylocation = $location.path();
 
-  }])
-  .controller('MyCtrl2', [function() {
+		$scope.getscreen = function(screen) {
+			$location.url('/' + screen);
+		};
 
-  }]);
+	$scope.chekLocation = function(loc) {
+	  return $location.path() == loc;
+	};
+	}])
+	/******************************************************************************
+  	//////////////////////////////////////////// HomeCtrl
+  	******************************************************************************/
+	.controller('HomeCtrl', [function() {
+
+	}])
+	/******************************************************************************
+  	//////////////////////////////////////////// UsersCtrl
+  	******************************************************************************/
+	.controller('UsersCtrl', [function() {
+
+	}]);

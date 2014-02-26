@@ -1,28 +1,42 @@
 /* app css stylesheet */
 
+html {
+  font-family: Tahoma, Arial;
+  color : #555;
+}
 .menu {
   list-style: none;
-  border-bottom: 0.1em solid black;
+  border-bottom: 0.1em dotted #aaa;
   margin-bottom: 2em;
-  padding: 0 0 0.5em;
+  padding: 0 0 1em;
+  
 }
 
 .menu:before {
-  content: "[";
+  content: "-";
 }
 
 .menu:after {
-  content: "]";
+  content: "-";
 }
 
 .menu > li {
   display: inline;
 }
 
+.menu > li a{
+  color : #000;
+}
+
 .menu > li:before {
   content: "|";
   padding-right: 0.3em;
 }
+
+.menu .activetab a{
+  color : #aaa;
+}
+
 
 .menu > li:nth-child(1):before {
   content: "";
