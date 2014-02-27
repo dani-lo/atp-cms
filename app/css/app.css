@@ -4,6 +4,9 @@ html {
   font-family: Tahoma, Arial;
   color : #555;
 }
+body {
+  padding : 24px;
+}
 .menu {
   list-style: none;
   border-bottom: 0.1em dotted #aaa;
@@ -41,4 +44,10 @@ html {
 .menu > li:nth-child(1):before {
   content: "";
   padding: 0;
+}
+td button {
+  width: 86px;
+font-size: 14px;
+padding: 1px;
+margin-bottom : 2px;
 }

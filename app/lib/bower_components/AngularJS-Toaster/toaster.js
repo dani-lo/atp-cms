@@ -16,6 +16,7 @@
 angular.module('toaster', ['ngAnimate'])
 .service('toaster', ['$rootScope', function ($rootScope) {
     this.pop = function (type, title, body, timeout, bodyOutputType) {
+
         this.toast = {
             type: type,
             title: title,

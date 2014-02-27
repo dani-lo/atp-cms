@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="app">
+<html lang="en" ng-app="atpcms">
 <head>
   <meta charset="utf-8">
   <title>ATP Cms</title>
@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body>
+  <toaster-container toaster-options="{'time-out': 3000}"></toaster-container>
   <ul class='menu main tabbed', ng-controller='NavCtrl')>
     <li ng-class="{activetab: chekLocation('/home')}"><a href="#/home">home</a></li>
     <li ng-class="{activetab: chekLocation('/users')}"><a href="#/users">users</a></li>
@@ -23,6 +24,7 @@
   <script src="lib/bower_components/jquery/dist/jquery.min.js"></script>
   <script src="lib/angular/angular.min.js"></script>
   <script src="lib/angular/angular-route.min.js"></script>
+  <script src="lib/angular/angular-animate.min.js"></script>
   <script src="lib/bower_components/AngularJS-Toaster/toaster.js"></script>
   <script src="lib/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="js/app.js"></script>

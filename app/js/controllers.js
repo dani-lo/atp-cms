@@ -2,7 +2,7 @@
 
 /* Controllers */
 
-angular.module('app.controllers', [])
+angular.module('atpcms.controllers', [])
 	/******************************************************************************
   	//////////////////////////////////////////// NavCtrl
   	******************************************************************************/
@@ -27,6 +27,30 @@ angular.module('app.controllers', [])
 	/******************************************************************************
   	//////////////////////////////////////////// UsersCtrl
   	******************************************************************************/
-	.controller('UsersCtrl', [function() {
+	.controller('UsersCtrl', ['$scope', 'toaster', 'UsersSrv',  function($scope, toaster, UsersSrv) {
+		//
+		$scope.users = [
+			{
+				id : 1,
+				name : "John Smith"
+			},
+			{
+				id : 2,
+				name : "Ted Brown"
+			}
+		]; 
 
+        $scope.addMode = true; 
+
+        $scope.toggleAddMode = function () { 
+            $scope.addMode = !$scope.addMode; 
+        }; 
+
+        $scope.toggleEditMode = function (user) { 
+            user.editMode = !user.editMode; 
+        }; 
+
+        $scope.testNotify = function() {
+        	toaster.pop('success', "title", '<ul><li>Render html</li></ul>', 5000, 'trustedHtml');
+        };
 	}]);
