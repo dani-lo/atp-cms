@@ -29,6 +29,7 @@ angular.module('atpcms.controllers', [])
   	******************************************************************************/
 	.controller('UsersCtrl', ['$scope', 'toaster', 'UsersSrv',  function($scope, toaster, UsersSrv) {
 		//
+
 		$scope.users = [
 			{
 				id : 1,
@@ -86,6 +87,8 @@ angular.module('atpcms.controllers', [])
 
         var errorCallback = function (data, status, headers, config) { 
             //notificationFactory.error(data.ExceptionMessage); 
+            //
+            toaster.pop('error', "Error", "<p>There was an error, please try again</p>", 5000, 'trustedHtml');
         }; 
 
         UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback); 

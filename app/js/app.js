@@ -12,7 +12,7 @@ angular.module('atpcms', [
   'atpcms.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/home', {templateUrl: 'partials/home.html', controller: 'HomeCtrl'});
-  $routeProvider.when('/users', {templateUrl: 'partials/users.html', controller: 'UsersCtrl'});
+  $routeProvider.when('/home', {templateUrl: 'partials/home.html', controller: 'NavCtrl'});
+  $routeProvider.when('/users', {templateUrl: 'partials/users.html', controller: 'NavCtrl'});
   $routeProvider.otherwise({redirectTo: '/home'});
 }]);

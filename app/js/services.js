@@ -34,14 +34,14 @@ services.factory('UsersSrv', ['$http', 'sid', function ($http, sid) {
     }; 
 }]);
 
-services.factory('NotifySrv', function () { 
-  
+services.factory('LoginSrv', function () { 
+    
+    var url = "";
+
     return { 
         success: function () { 
-            toaster.success("Success"); 
         }, 
         error: function (text) { 
-            toaster.error(text, "Error!"); 
         } 
     }; 
 }); 
