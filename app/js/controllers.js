@@ -36,6 +36,14 @@ angular.module('atpcms.controllers', [])
 			},
 			{
 				id : 2,
+				name : "Mary Sheeps"
+			},
+			{
+				id : 3,
+				name : "Skip Prior"
+			},
+			{
+				id : 4,
 				name : "Ted Brown"
 			}
 		]; 
@@ -56,4 +64,41 @@ angular.module('atpcms.controllers', [])
         	toaster.pop('info', "info", '<ul><li>Render html</li></ul>', 5000, 'trustedHtml');
         	toaster.pop('warning', "warning", '<ul><li>Render html</li></ul>', 5000, 'trustedHtml');
         };
+
+        var getUsersSuccessCallback = function (data, status) { 
+            $scope.users = data; 
+        }; 
+
+        var successCallback = function (data, status, headers, config) { 
+            
+            //notificationFactory.success(); 
+
+            return UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback); 
+        }; 
+
+        var successPostCallback = function (data, status, headers, config) { 
+        	//
+            successCallback(data, status, headers, config).success(function () { 
+                $scope.toggleAddMode(); 
+                $scope.user = {}; 
+            }); 
+        }; 
+
+        var errorCallback = function (data, status, headers, config) { 
+            //notificationFactory.error(data.ExceptionMessage); 
+        }; 
+
+        UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback); 
+
+        $scope.addUser = function () { 
+            UsersSrv.addUser($scope.user).success(successPostCallback).error(errorCallback); 
+        }; 
+
+        $scope.deleteUser = function (user) { 
+            UsersSrv.deleteUser(user).success(successCallback).error(errorCallback); 
+        }; 
+
+        $scope.updateUser = function (user) { 
+            UsersSrv.updateUser(user).success(successCallback).error(errorCallback); 
+        }; 
 	}]);
