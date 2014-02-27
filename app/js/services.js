@@ -34,14 +34,17 @@ services.factory('UsersSrv', ['$http', 'sid', function ($http, sid) {
     }; 
 }]);
 
-services.factory('LoginSrv', function () { 
+services.factory('LoginSrv', ['$http', function ($http) { 
     
-    var url = "";
+    var url = "http://attribute2.com/api/login";
 
     return { 
-        success: function () { 
-        }, 
-        error: function (text) { 
-        } 
+        getLogin: function (login) { 
+            return $http.get(url + "?u=" + login.u + "&p=" + login.p); 
+        }
     }; 
-}); 
+}]); 
+
+services.factory('StorageSrv', [function () { 
+    // 
+}]); 

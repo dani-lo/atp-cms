@@ -22,7 +22,31 @@ angular.module('atpcms.controllers', [])
   	//////////////////////////////////////////// HomeCtrl
   	******************************************************************************/
 	.controller('HomeCtrl', [function() {
+		//
+	}])
+	/******************************************************************************
+  	//////////////////////////////////////////// HomeCtrl
+  	******************************************************************************/
+	.controller('LoginCtrl', ['$scope', '$location', 'LoginSrv', function($scope, $location, LoginSrv) {
+		//
+		$scope.login = {
+			u : "",
+			p : ""
+		};
 
+		$scope.dologin = function() {
+			LoginSrv.getLogin($scope.login).success(onLoginSuccess).error(onLoginError);
+		};
+
+		var onLoginSuccess = function() {
+			//
+			alert("suxccess!!")
+		};
+
+		var onLoginError = function() {
+			//
+			alert("erroooorr!!")
+		};
 	}])
 	/******************************************************************************
   	//////////////////////////////////////////// UsersCtrl
