@@ -51,6 +51,9 @@ angular.module('atpcms.controllers', [])
         }; 
 
         $scope.testNotify = function() {
-        	toaster.pop('success', "title", '<ul><li>Render html</li></ul>', 5000, 'trustedHtml');
+        	toaster.pop('success', "success", '<ul><li>Render html</li></ul>', 5000, 'trustedHtml');
+        	toaster.pop('error', "error", '<ul><li>Render html</li></ul>', 5000, 'trustedHtml');
+        	toaster.pop('info', "info", '<ul><li>Render html</li></ul>', 5000, 'trustedHtml');
+        	toaster.pop('warning', "warning", '<ul><li>Render html</li></ul>', 5000, 'trustedHtml');
         };
 	}]);
