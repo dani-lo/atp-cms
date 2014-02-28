@@ -6,6 +6,7 @@ angular.module('atpcms', [
   'ngRoute',
   'ngAnimate', 
   'toaster',
+  "checklist-model",
   'atpcms.filters',
   'atpcms.services',
   'atpcms.directives',

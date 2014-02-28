@@ -37,11 +37,69 @@ angular.module('atpcms.controllers', [])
 	/******************************************************************************
   	//////////////////////////////////////////// HomeCtrl
   	******************************************************************************/
-	.controller('HomeCtrl', ['AppstateSrv', function(AppstateSrv) {
+	.controller('HomeCtrl', ['$scope', 'AppstateSrv', 'AdvertisersSrv', 'MarketsSrv',function($scope, AppstateSrv, AdvertisersSrv, MarketsSrv) {
 		//
 		if(!AppstateSrv.getParam("loggedin")){
 			return false;
 		};
+
+		if(AppstateSrv.getParam("advertisers") === null) {
+			//
+			AdvertisersSrv
+			.getAdvertisers()
+			.success(function(advData){
+				
+				var apiAdvertisers = [];
+				
+				angular.forEach(advData, function(advertiser){
+					//
+					MarketsSrv
+					.getMarkets(advertiser.advertiserID)
+					.success(function(mktData){
+						//
+						apiAdvertisers.push({advertiser : advertiser, markets : mktData});
+						AppstateSrv.setParam("advertisers", apiAdvertisers);
+					})
+					.error(function(){
+						// die silently
+					})
+				});
+			})
+			.error(function(){
+				//
+				alert("error fetching advertisers");
+			});
+		}
+		
+
+/* ---- test fo checklist-model
+
+		$scope.roles = [
+		    'guest', 
+		    'user', 
+		    'customer', 
+		    'admin'
+		  ];
+		  $scope.user = {
+		    roles: ['user']
+		  };
+		  $scope.checkAll = function() {
+		    $scope.user.roles = angular.copy($scope.roles);
+		  };
+		  $scope.uncheckAll = function() {
+		    $scope.user.roles = [];
+		  };
+		  $scope.checkFirst = function() {
+		    $scope.user.roles.splice(0, $scope.user.roles.length); 
+		    $scope.user.roles.push('guest');
+		  };
+
+
+
+		  $scope.logUser = function() {
+	  		console.log($scope.user)
+	  	};
+*/ 
 	}])
 	/******************************************************************************
   	//////////////////////////////////////////// HomeCtrl
