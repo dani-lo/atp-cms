@@ -24,9 +24,9 @@
                         <div class="user-data-ui">
                             <div ng-repeat="advertiserObj in advertisers">
                                 <input ng-model="user.email" /> 
-                                <p><input type="checkbox" />{{advertiserObj.advertiser.advertiserName}}</p>
-                                <div ng-repeat="market in advertiserObj.markets">
-                                    <p class="nested"><input type="checkbox" />{{market.marketName}}</p>
+                                <p><!--<input type="checkbox" />-->{{advertiserObj.advertiser.advertiserName}}</p>
+                                <div>
+                                    <span  ng-repeat="market in advertiserObj.markets" class="nested"><input type="checkbox" />{{market.marketName}}</span>
                                 </div>
                             </div>
                             <!--
@@ -65,9 +65,10 @@
                         
                         <div ng-repeat="advertiserObj in advertisers" ng-show="user.editMode == true">
                             <input ng-model="user.email" /> 
-                            <p><input type="checkbox" />{{advertiserObj.advertiser.advertiserName}}</p>
-                            <div ng-repeat="market in advertiserObj.markets">
-                                <p class="nested"><input type="checkbox" />{{market.marketName}}</p>
+                            <p><!--<input type="checkbox" />-->{{advertiserObj.advertiser.advertiserName}}</span>
+                            <div>
+                                <span ng-repeat="market in advertiserObj.markets" class="nested">
+                                    <input type="checkbox" ng-checked="userHasMarket(user, market.marketID)"/>{{market.marketName}}</span>
                             </div>
                         </div>
                         <!--

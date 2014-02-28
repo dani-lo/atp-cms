@@ -165,6 +165,23 @@ angular.module('atpcms.controllers', [])
 		]; 
 
         $scope.addMode = true; 
+
+        $scope.userHasMarket = function(user, checkMarket) {
+        	console.log(user)
+        	console.log(checkMarket)
+        	var userPermission, hasMarket = false;
+
+        	angular.forEach(user.permissions, function(advertiser){
+        		angular.forEach(advertiser, function(market){
+        			console.log("---- " + market)
+        			if(market == checkMarket){
+        				hasMarket = true;
+        			}
+        		})
+        	})
+
+        	return hasMarket;
+        }
 /*
         $scope.advertiserClick = function(chbox, user) {
         	
