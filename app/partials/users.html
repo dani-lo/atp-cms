@@ -8,9 +8,9 @@
                         <div class="btn-toolbar"><button ng-click="toggleAddMode()">Toggle Add</button></div> 
                     </th> 
                     <th style="width: 50px;">Id</th> 
-                    <th>Name</th> 
+                    <th>Email</th> 
                 </tr> 
-                <tr ng-show="addMode"> 
+                <tr ng-show="addMode"  class="user-add-row"> 
                     <td> 
                         <div class="btn-toolbar"> 
                             <div class="btn-group"> 
@@ -21,9 +21,29 @@
                     </td> 
                     <td></td> 
                     <td> 
-                        <input ng-model="user.name" /></td> 
+                        <div class="user-data-ui">
+                            <div ng-repeat="advertiserObj in advertisers">
+                                <input ng-model="user.email" /> 
+                                <p><input type="checkbox" />{{advertiserObj.advertiser.advertiserName}}</p>
+                                <div ng-repeat="market in advertiserObj.markets">
+                                    <p class="nested"><input type="checkbox" />{{market.marketName}}</p>
+                                </div>
+                            </div>
+                            <!--
+                            <label ng-repeat="advertiser in advertisers">
+                                <input type="checkbox" ng-model="user.permissions.advertiser"  ng-click="advertiserClick(this)"> {{advertiser.advertiser.advertiserName}}
+                                <div ng-show="currAdvertisers[advertiser.advertiser.advertiserID].indexOf('::' + advertiser.advertiser.advertiserID) !== -1">
+                                    <label ng-repeat="market in advertiser.markets">
+                                        <input type="checkbox" checklist-model="user.permissions[advertiser.advertiser.advertiserID]" checklist-value="market.marketID"> {{market.marketName}}
+                                    </label>
+                                </div>
+
+                            </label>
+                        -->
+                        </div>
+                    </td> 
                 </tr> 
-                <tr ng-repeat="user in users | orderBy:'id':true"> 
+                <tr class="user-edit-row" ng-repeat="user in users | orderBy:'id':true"> 
                     <td> 
                         <div class="btn-toolbar" ng-show="user.editMode == null || user.editMode == false"> 
                             <div class="btn-group"> 
@@ -41,8 +61,25 @@
                     </td> 
                     <td>{{user.id}}</td> 
                     <td> 
-                        <span ng-show="user.editMode == null || user.editMode == false">{{user.name}}</span> 
-                        <input ng-model="user.name" ng-show="user.editMode == true" /> 
+                        <span ng-show="user.editMode == null || user.editMode == false">{{user.email}}</span> 
+                        
+                        <div ng-repeat="advertiserObj in advertisers" ng-show="user.editMode == true">
+                            <input ng-model="user.email" /> 
+                            <p><input type="checkbox" />{{advertiserObj.advertiser.advertiserName}}</p>
+                            <div ng-repeat="market in advertiserObj.markets">
+                                <p class="nested"><input type="checkbox" />{{market.marketName}}</p>
+                            </div>
+                        </div>
+                        <!--
+                        <label ng-repeat="advertiser in advertisers">
+                            <input type="checkbox" ng-model="user.permissions.advertiser"  ng-click="advertiserClick(this)"> {{advertiser.advertiser.advertiserName}}
+                            <label ng-repeat="market in advertiser.markets" ng-show="currAdvertisers.indexOf('::' + advertiser.advertiser.advertiserID) !== -1">
+                                <input type="checkbox" checklist-model="user.permissions[advertiser.advertiser.advertiserID]" checklist-value="market.marketID"> {{market.marketName}}
+                            </label>
+
+
+                        </label>
+                        -->
                     </td> 
                 </tr> 
             </table> 

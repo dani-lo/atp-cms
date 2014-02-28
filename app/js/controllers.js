@@ -143,35 +143,101 @@ angular.module('atpcms.controllers', [])
 		if(!AppstateSrv.getParam("loggedin")){
 			return false;
 		};
+		
+		$scope.advertisers = AppstateSrv.getParam("advertisers");
+
+		$scope.currAdvertisers = {};
+
+		console.log($scope.advertisers)
+
+		$scope.user = {
+			email : "",
+			permissions : {}
+		};
 
 		$scope.users = [
 			{
-				id : 1,
-				name : "John Smith"
-			},
-			{
-				id : 2,
-				name : "Mary Sheeps"
-			},
-			{
-				id : 3,
-				name : "Skip Prior"
-			},
-			{
-				id : 4,
-				name : "Ted Brown"
+				email : "JohnSmith@foo.com",
+				permissions : {
+					"101" : ["104848"]
+				}
 			}
 		]; 
 
         $scope.addMode = true; 
+/*
+        $scope.advertiserClick = function(chbox, user) {
+        	
+        	if(!user){
+        		user = $scope.user;
+        	};
 
+        	if(user.email == ""){
+
+        	}
+
+        	if(!$scope.currAdvertisers[user.email]){
+        		$scope.currAdvertisers[user.id] = "";
+        	}
+        	var advID = chbox.advertiser.advertiser.advertiserID;
+
+        	if(user.permissions.advertiser == false) {
+        		$scope.currAdvertisers[user.id] += "::" + advID;
+        	} else {
+        		$scope.currAdvertisers = $scope.currAdvertisers[user.id].replace("::" + advID, "");
+        		user.permissions[advID] = [];
+        	};
+
+        	//$scope.$apply();
+        };
+*/
         $scope.toggleAddMode = function () { 
             $scope.addMode = !$scope.addMode; 
         }; 
 
         $scope.toggleEditMode = function (user) { 
+        	//$scope.user = user;
             user.editMode = !user.editMode; 
         }; 
+
+        var prepareUser = function(user){
+
+        	delete user.permissions.advertiser;
+
+        	for(var advID in user.permissions){
+        		var hasAllMarkets = true, 
+        			strMarkets = "::" + user.permissions[advID].join("::");
+
+        		console.log(strMarkets)
+
+        		angular.forEach($scope.advertisers, function(advertiserObj){
+
+        			if(advertiserObj.advertiser.advertiserID == advID) {
+        				//
+        				var allmarkets = advertiserObj.markets;
+        				console.log("1")
+        				console.log(allmarkets)
+        				angular.forEach(allmarkets, function(market){
+
+        					console.log("has market ...... ? " + market.marketName);
+
+        					if(strMarkets.indexOf("::" + market.marketID) === -1){
+        						hasAllMarkets = false;
+        					};
+        				});
+        			};
+        		});
+
+        		if(hasAllMarkets){
+        			console.log("YES")
+        			user.permissions[advID] = true;
+        		} else {
+        			console.log("NOPE")
+        		}
+        	};
+        	
+        	return user;
+        };
 
         var getUsersSuccessCallback = function (data, status) { 
             $scope.users = data; 
@@ -196,10 +262,11 @@ angular.module('atpcms.controllers', [])
             //toaster.pop('error', "Error", "<p>There was an error, please try again</p>", 5000, 'trustedHtml');
         }; 
 
-        UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback); 
-
         $scope.addUser = function () { 
-            UsersSrv.addUser($scope.user).success(successPostCallback).error(errorCallback); 
+        	
+        	var apiUser = prepareUser($scope.user);
+        	console.log(apiUser);
+            UsersSrv.addUser(apiUser).success(successPostCallback).error(errorCallback); 
         }; 
 
         $scope.deleteUser = function (user) { 
@@ -207,6 +274,25 @@ angular.module('atpcms.controllers', [])
         }; 
 
         $scope.updateUser = function (user) { 
-            UsersSrv.updateUser(user).success(successCallback).error(errorCallback); 
+        	var apiUser = prepareUser(user);
+            UsersSrv.updateUser(apiUser).success(successCallback).error(errorCallback); 
         }; 
+
+        UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback);
+/*
+        $scope.$watch("user.permissions.advertiser", function(){
+        	alert($scope.user.permissions)
+        	if($scope.user.permissions) {
+        		alert("change!")
+        		$scope.currAdvertisers = "";
+        		
+        		angular.forEach($scope.user.permissions.advertiser, function(a){
+	        		$scope.currAdvertisers += "::" + a;
+	        	});
+				
+	        	$scope.$apply();
+        	}
+        	
+        });
+*/
 	}]);
