@@ -11,9 +11,10 @@
   <toaster-container></toaster-container>
   <header>
     <ul class='menu main tabbed', ng-controller='NavCtrl')>
-      <li ng-class="{activetab: chekLocation('/home')}"><a href="#/home">home</a></li>
-      <li ng-class="{activetab: chekLocation('/users')}"><a href="#/users">users</a></li>
-      <li ng-class="{activetab: chekLocation('/login')}"><a href="#/login">login</a></li>
+      <li ng-class="{activetab: chekLocation('/home'), visibletab : checkLoggedin()}"><a href="#/home">home</a></li>
+      <li ng-class="{activetab: chekLocation('/users'), visibletab : checkLoggedin()}"><a href="#/users">users</a></li>
+      <li ng-class="{activetab: chekLocation('/login'), visibletab : !checkLoggedin()}"><a href="#/login">login</a></li>
+      <li ng-class="{activetab: false, visibletab : checkLoggedin()}"><a href="#/logout">logout</a></li>
     </ul>
     <div id="versioning">
       <p>Angular seed app v<span app-version></span></p>

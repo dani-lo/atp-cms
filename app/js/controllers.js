@@ -6,7 +6,7 @@ angular.module('atpcms.controllers', [])
 	/******************************************************************************
   	//////////////////////////////////////////// NavCtrl
   	******************************************************************************/
-	.controller('NavCtrl', ['$scope', '$location', function($scope, $location) {
+	.controller('NavCtrl', ['$scope', '$rootScope', '$location', 'AppstateSrv', function($scope, $rootScope, $location, AppstateSrv) {
 	//
 		//$scope.mylocation = $location.path();
 
@@ -14,20 +14,41 @@ angular.module('atpcms.controllers', [])
 			$location.url('/' + screen);
 		};
 
-	$scope.chekLocation = function(loc) {
-	  return $location.path() == loc;
-	};
+		$scope.chekLocation = function(loc) {
+		  return $location.path() == loc;
+		};
+
+		$scope.checkLoggedin = function() {
+		  return AppstateSrv.getParam("loggedin");
+		};
+		
+
+		var authCheck = function (event) {
+		    if(!AppstateSrv.getParam("loggedin")) {
+		        //
+		        $location.path('/login');
+		    };
+		};
+
+		authCheck(null);//
+
+		$rootScope.$on("$routeChangeStart", authCheck);
 	}])
 	/******************************************************************************
   	//////////////////////////////////////////// HomeCtrl
   	******************************************************************************/
-	.controller('HomeCtrl', [function() {
+	.controller('HomeCtrl', ['AppstateSrv', function(AppstateSrv) {
 		//
+		if(!AppstateSrv.getParam("loggedin")){
+			return false;
+		};
 	}])
 	/******************************************************************************
   	//////////////////////////////////////////// HomeCtrl
   	******************************************************************************/
-	.controller('LoginCtrl', ['$scope', '$location', 'LoginSrv', function($scope, $location, LoginSrv) {
+	.controller('LoginCtrl', [
+		'$scope', '$location', 'LoginSrv', 'AppstateSrv', 'toaster',
+		function($scope, $location, LoginSrv, AppstateSrv, toaster) {
 		//
 		$scope.login = {
 			u : "",
@@ -35,24 +56,35 @@ angular.module('atpcms.controllers', [])
 		};
 
 		$scope.dologin = function() {
+
 			LoginSrv.getLogin($scope.login).success(onLoginSuccess).error(onLoginError);
 		};
 
-		var onLoginSuccess = function() {
+		var onLoginSuccess = function(data) {
 			//
-			alert("suxccess!!")
+			toaster.pop('success', "success", '<p>Your login was successful</p>', 5000, 'trustedHtml');
+
+			AppstateSrv.setParam('loggedin', true)
+			AppstateSrv.setParam('sid', data.sid)
+
+			$location.path("home");
 		};
 
 		var onLoginError = function() {
 			//
-			alert("erroooorr!!")
+			toaster.pop('error', "error", '<p>Your login was unsuccessful</p>', 5000, 'trustedHtml');
+			
 		};
 	}])
 	/******************************************************************************
   	//////////////////////////////////////////// UsersCtrl
   	******************************************************************************/
-	.controller('UsersCtrl', ['$scope', 'toaster', 'UsersSrv',  function($scope, toaster, UsersSrv) {
+	.controller('UsersCtrl', ['$scope', 'toaster', 'UsersSrv', 'AppstateSrv', function($scope, toaster, UsersSrv, AppstateSrv) {
 		//
+
+		if(!AppstateSrv.getParam("loggedin")){
+			return false;
+		};
 
 		$scope.users = [
 			{
@@ -83,21 +115,12 @@ angular.module('atpcms.controllers', [])
             user.editMode = !user.editMode; 
         }; 
 
-        $scope.testNotify = function() {
-        	toaster.pop('success', "success", '<ul><li>Render html</li></ul>', 5000, 'trustedHtml');
-        	toaster.pop('error', "error", '<ul><li>Render html</li></ul>', 5000, 'trustedHtml');
-        	toaster.pop('info', "info", '<ul><li>Render html</li></ul>', 5000, 'trustedHtml');
-        	toaster.pop('warning', "warning", '<ul><li>Render html</li></ul>', 5000, 'trustedHtml');
-        };
-
         var getUsersSuccessCallback = function (data, status) { 
             $scope.users = data; 
         }; 
 
         var successCallback = function (data, status, headers, config) { 
             
-            //notificationFactory.success(); 
-
             return UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback); 
         }; 
 
@@ -112,7 +135,7 @@ angular.module('atpcms.controllers', [])
         var errorCallback = function (data, status, headers, config) { 
             //notificationFactory.error(data.ExceptionMessage); 
             //
-            toaster.pop('error', "Error", "<p>There was an error, please try again</p>", 5000, 'trustedHtml');
+            //toaster.pop('error', "Error", "<p>There was an error, please try again</p>", 5000, 'trustedHtml');
         }; 
 
         UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback); 

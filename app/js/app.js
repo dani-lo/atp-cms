@@ -15,5 +15,6 @@ config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/home', {templateUrl: 'partials/home.html', controller: 'NavCtrl'});
   $routeProvider.when('/users', {templateUrl: 'partials/users.html', controller: 'NavCtrl'});
   $routeProvider.when('/login', {templateUrl: 'partials/login.html', controller: 'NavCtrl'});
+  $routeProvider.when('/logout', {templateUrl: 'partials/logout.html', controller: 'NavCtrl'});
   $routeProvider.otherwise({redirectTo: '/login'});
 }]);
