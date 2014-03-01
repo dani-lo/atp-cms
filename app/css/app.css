@@ -69,3 +69,19 @@ td button {
     padding : 0;
     margin : 0;
 }
+.user-edit-row span {
+  
+  text-decoration: line-through;
+}
+.user-edit-row span.editable {
+  text-decoration: none;
+}
+.user-edit-row span input{
+  display: none;
+}
+.user-edit-row span.editable input{
+  display: inline;
+}
+.user-edit-row span.activespan {
+  text-decoration: none;
+}

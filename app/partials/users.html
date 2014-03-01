@@ -24,8 +24,8 @@
                         <div class="user-data-ui">
                             <div ng-repeat="advertiserObj in advertisers">
                                 <input ng-model="user.email" /> 
-                                <p><!--<input type="checkbox" />-->{{advertiserObj.advertiser.advertiserName}}</p>
-                                <div>
+                                <p  class="advertiser-title"><!--<input type="checkbox" />-->{{advertiserObj.advertiser.advertiserName}}</p>
+                                <div class="advertiser-permissions">
                                     <span  ng-repeat="market in advertiserObj.markets" class="nested"><input type="checkbox" />{{market.marketName}}</span>
                                 </div>
                             </div>
@@ -61,14 +61,17 @@
                     </td> 
                     <td>{{user.id}}</td> 
                     <td> 
-                        <span ng-show="user.editMode == null || user.editMode == false">{{user.email}}</span> 
+
+                        <p ng-show="user.editMode == null || user.editMode == false">{{user.email}}</p> 
+                        <p><input ng-model="useredit[user.id].email" ng-show="user.editMode == true" /> </p>
                         
-                        <div ng-repeat="advertiserObj in advertisers" ng-show="user.editMode == true">
-                            <input ng-model="user.email" /> 
-                            <p><!--<input type="checkbox" />-->{{advertiserObj.advertiser.advertiserName}}</span>
-                            <div>
-                                <span ng-repeat="market in advertiserObj.markets" class="nested">
-                                    <input type="checkbox" ng-checked="userHasMarket(user, market.marketID)"/>{{market.marketName}}</span>
+                        <div class="user-edit-row" ng-repeat="advertiserObj in advertisers">
+                            
+                            <p class="advertiser-title">{{advertiserObj.advertiser.advertiserName}}</span>
+                            <div class="advertiser-permissions">
+                                <span ng-class="{editable: user.editMode == true, activespan : userHasMarket(user, market.marketID)}" ng-repeat="market in advertiserObj.markets" class="nested">
+                                    <input type="checkbox" ng-checked="userHasMarket(user, market.marketID)" ng-model="useredit[user.id].permissions[advertiserObj.advertiser.advertiserID][market.marketID]" />{{market.marketName}}
+                                </span>
                             </div>
                         </div>
                         <!--
