@@ -22,8 +22,9 @@
                     <td></td> 
                     <td> 
                         <div class="user-data-ui">
+                            <input ng-model="user.email" /> 
+                            <p>admin ?<input ng-model="user.admin" type="checkbox" /></p>
                             <div ng-repeat="advertiserObj in advertisers">
-                                <input ng-model="user.email" /> 
                                 <p  class="advertiser-title"><!--<input type="checkbox" />-->{{advertiserObj.advertiser.advertiserName}}</p>
                                 <div class="advertiser-permissions">
                                     <span  ng-repeat="market in advertiserObj.markets" class="nested"><input type="checkbox" ng-model="user.permissions[advertiserObj.advertiser.advertiserID][market.marketID]" />{{market.marketName}}</span>
@@ -44,7 +45,6 @@
                             <div class="btn-group"> 
                                 <button ng-click="toggleEditMode(user)">Cancel</i> 
                                 <button ng-click="updateUser(user)">Update</i> 
-                                
                             </div> 
                         </div> 
                     </td> 
@@ -52,8 +52,9 @@
                     <td> 
 
                         <p ng-show="user.editMode == null || user.editMode == false">{{user.email}}</p> 
-                        <p><input ng-model="useredit[user.id].email" ng-show="user.editMode == true" /> </p>
-                        
+                        <p ng-show="user.editMode == null || user.editMode == false">admin? {{user.admin}}</p> 
+                        <p ng-show="user.editMode == true"><input ng-model="useredit[user.id].email" /> </p>
+                        <p ng-show="user.editMode == true">admin ?<input ng-model="useredit[user.id].admin" type="checkbox" /></p>
                         <div class="user-edit-row" ng-repeat="advertiserObj in advertisers">
                             
                             <p class="advertiser-title">{{advertiserObj.advertiser.advertiserName}}</span>

@@ -119,6 +119,7 @@ angular.module('atpcms.controllers', [])
 
 		$scope.user = {
 			email : "",
+			admin : false,
 			permissions : {}
 		};
 
@@ -151,7 +152,7 @@ angular.module('atpcms.controllers', [])
         		$scope.useredit[user.id] = {
         			permissions : {},
         			email : user.email,
-        			admin : null
+        			admin : false
         		};
         		angular.forEach($scope.advertisers, function(advertiserObj){
         			
@@ -218,6 +219,8 @@ angular.module('atpcms.controllers', [])
 				permissionscopy = {};
 
 			if(model) {
+				//
+				console.log(model)
 				for (var userID in model) {
 	        		if(userID == user.id) {
 	        			exportuser = {
@@ -225,7 +228,7 @@ angular.module('atpcms.controllers', [])
 	        				permissions : model[userID].permissions,
 	        				email : model[userID].email,
 	        				admin : model[userID].admin
-	        			}
+	        			};
 
 	        			exportuser.id = user.id;
 
@@ -272,6 +275,11 @@ angular.module('atpcms.controllers', [])
         	return exportuser;
         };
 
+        var validateEmail = function(email) { 
+		    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		    return re.test(email);
+		} 
+
         var getUsersSuccessCallback = function (data, status) { 
             $scope.users = data; 
         }; 
@@ -296,18 +304,36 @@ angular.module('atpcms.controllers', [])
         }; 
 
         $scope.addUser = function () { 
-        	
-        	var apiUser = prepareUserexport($scope.user);
+        	//
+        	var apiUser;
+
+        	if(!validateEmail($scope.user.email)){
+        		toaster.pop('error', "Error", "<p>Please enter a valid email address</p>", 3000, 'trustedHtml');
+        		return false;
+        	};
+
+        	apiUser = prepareUserexport($scope.user);
+
             UsersSrv.addUser(apiUser).success(successPostCallback).error(errorCallback); 
            	_.delay(function(){prepareAdduser()}, 1000);
         }; 
 
         $scope.deleteUser = function (user) { 
+        	//
             UsersSrv.deleteUser(user).success(successCallback).error(errorCallback); 
         }; 
 
         $scope.updateUser = function (user) { 
-        	var apiUser = prepareUserexport(user, $scope.useredit);
+        	//
+        	var apiUser;
+
+        	if(!validateEmail($scope.useredit[user.id].email)){
+        		toaster.pop('error', "Error", "<p>Please enter a valid email address</p>", 3000, 'trustedHtml');
+        		return false;
+        	};
+
+        	apiUser = prepareUserexport(user, $scope.useredit);
+
             UsersSrv.updateUser(apiUser).success(successCallback).error(errorCallback); 
         }; 
 
@@ -316,20 +342,4 @@ angular.module('atpcms.controllers', [])
         prepareEdituser();
 
         prepareAdduser();
-/*
-        $scope.$watch("user.permissions.advertiser", function(){
-        	alert($scope.user.permissions)
-        	if($scope.user.permissions) {
-        		alert("change!")
-        		$scope.currAdvertisers = "";
-        		
-        		angular.forEach($scope.user.permissions.advertiser, function(a){
-	        		$scope.currAdvertisers += "::" + a;
-	        	});
-				
-	        	$scope.$apply();
-        	}
-        	
-        });
-*/
 	}]);
