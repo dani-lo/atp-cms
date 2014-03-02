@@ -26,20 +26,9 @@
                                 <input ng-model="user.email" /> 
                                 <p  class="advertiser-title"><!--<input type="checkbox" />-->{{advertiserObj.advertiser.advertiserName}}</p>
                                 <div class="advertiser-permissions">
-                                    <span  ng-repeat="market in advertiserObj.markets" class="nested"><input type="checkbox" />{{market.marketName}}</span>
+                                    <span  ng-repeat="market in advertiserObj.markets" class="nested"><input type="checkbox" ng-model="user.permissions[advertiserObj.advertiser.advertiserID][market.marketID]" />{{market.marketName}}</span>
                                 </div>
                             </div>
-                            <!--
-                            <label ng-repeat="advertiser in advertisers">
-                                <input type="checkbox" ng-model="user.permissions.advertiser"  ng-click="advertiserClick(this)"> {{advertiser.advertiser.advertiserName}}
-                                <div ng-show="currAdvertisers[advertiser.advertiser.advertiserID].indexOf('::' + advertiser.advertiser.advertiserID) !== -1">
-                                    <label ng-repeat="market in advertiser.markets">
-                                        <input type="checkbox" checklist-model="user.permissions[advertiser.advertiser.advertiserID]" checklist-value="market.marketID"> {{market.marketName}}
-                                    </label>
-                                </div>
-
-                            </label>
-                        -->
                         </div>
                     </td> 
                 </tr> 
@@ -74,16 +63,6 @@
                                 </span>
                             </div>
                         </div>
-                        <!--
-                        <label ng-repeat="advertiser in advertisers">
-                            <input type="checkbox" ng-model="user.permissions.advertiser"  ng-click="advertiserClick(this)"> {{advertiser.advertiser.advertiserName}}
-                            <label ng-repeat="market in advertiser.markets" ng-show="currAdvertisers.indexOf('::' + advertiser.advertiser.advertiserID) !== -1">
-                                <input type="checkbox" checklist-model="user.permissions[advertiser.advertiser.advertiserID]" checklist-value="market.marketID"> {{market.marketName}}
-                            </label>
-
-
-                        </label>
-                        -->
                     </td> 
                 </tr> 
             </table> 

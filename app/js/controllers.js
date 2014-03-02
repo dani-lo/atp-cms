@@ -70,36 +70,6 @@ angular.module('atpcms.controllers', [])
 				alert("error fetching advertisers");
 			});
 		}
-		
-
-/* ---- test fo checklist-model
-
-		$scope.roles = [
-		    'guest', 
-		    'user', 
-		    'customer', 
-		    'admin'
-		  ];
-		  $scope.user = {
-		    roles: ['user']
-		  };
-		  $scope.checkAll = function() {
-		    $scope.user.roles = angular.copy($scope.roles);
-		  };
-		  $scope.uncheckAll = function() {
-		    $scope.user.roles = [];
-		  };
-		  $scope.checkFirst = function() {
-		    $scope.user.roles.splice(0, $scope.user.roles.length); 
-		    $scope.user.roles.push('guest');
-		  };
-
-
-
-		  $scope.logUser = function() {
-	  		console.log($scope.user)
-	  	};
-*/ 
 	}])
 	/******************************************************************************
   	//////////////////////////////////////////// HomeCtrl
@@ -139,7 +109,6 @@ angular.module('atpcms.controllers', [])
   	******************************************************************************/
 	.controller('UsersCtrl', ['$scope', 'toaster', 'UsersSrv', 'AppstateSrv', function($scope, toaster, UsersSrv, AppstateSrv) {
 		//
-
 		if(!AppstateSrv.getParam("loggedin")){
 			return false;
 		};
@@ -147,8 +116,6 @@ angular.module('atpcms.controllers', [])
 		$scope.advertisers = AppstateSrv.getParam("advertisers");
 
 		$scope.currAdvertisers = {};
-
-		console.log($scope.advertisers)
 
 		$scope.user = {
 			email : "",
@@ -160,7 +127,15 @@ angular.module('atpcms.controllers', [])
 		$scope.users = [
 			{
 				id : 1,
-				email : "JohnSmith@foo.com",
+				email : "johnsmith@foo.com",
+				admin : false,
+				permissions : {
+					"101" : ["104848"]
+				}
+			},
+			{
+				id : 2,
+				email : "marybrown@baz.com",
 				admin : false,
 				permissions : {
 					"101" : ["104848"]
@@ -196,6 +171,22 @@ angular.module('atpcms.controllers', [])
         	});
         };
 
+        var prepareAdduser = function() {
+
+    		angular.forEach($scope.advertisers, function(advertiserObj){
+    			
+    			$scope.user.permissions[advertiserObj.advertiser.advertiserID] = {};
+    			
+    			_.each(advertiserObj.markets, function(market){
+
+    				var marketId = market.marketID;
+
+    				$scope.user.permissions[advertiserObj.advertiser.advertiserID][marketId] = false;
+    			});
+    		});
+    	};
+
+
         $scope.userHasMarket = function(user, checkMarket) {
 
         	var userPermission, hasMarket = false;
@@ -217,29 +208,35 @@ angular.module('atpcms.controllers', [])
         }; 
 
         $scope.toggleEditMode = function (user) { 
-        	//$scope.user = user;
+
             user.editMode = !user.editMode; 
         }; 
 
-        var prepareUserexport = function(user){
+        var prepareUserexport = function(user, model){
 
-        	var exportuser = {};
+        	var exportuser = {},
+				permissionscopy = {};
 
-        	for (var userID in $scope.useredit) {
-        		if(userID == user.id) {
-        			exportuser = {
-        				id : userID,
-        				permissions : $scope.useredit[userID].permissions,
-        				email : $scope.useredit[userID].email,
-        				admin : $scope.useredit[userID].admin
-        			}
-        			_.clone($scope.useredit[userID]);
-        			exportuser.id = user.id;
-        		};
-        	};
+			if(model) {
+				for (var userID in model) {
+	        		if(userID == user.id) {
+	        			exportuser = {
+	        				id : userID,
+	        				permissions : model[userID].permissions,
+	        				email : model[userID].email,
+	        				admin : model[userID].admin
+	        			}
 
-        	console.log(exportuser)
+	        			exportuser.id = user.id;
 
+	        			permissionscopy[userID] = _.clone(model[userID].permissions);
+	        		};
+	        	};
+			} else {
+				exportuser = $scope.user;
+				permissionscopy = _.clone($scope.user.permissions);
+			};
+        	
         	for(var advID in exportuser.permissions){
         		
         		var hasAllMarkets = true;
@@ -260,14 +257,18 @@ angular.module('atpcms.controllers', [])
         		});
 
         		if(hasAllMarkets){
-        			//console.log("YES")
-        			exportuser.permissions[advID] = true;
+    				//
+           			exportuser.permissions[advID] = true;
+
+        			if(model){
+        				$scope.useredit[exportuser.id].permissions = permissionscopy[exportuser.id];
+        			} else {
+        				
+        			};
         		} else {
-        			//console.log("NOPE")
-        		}
+        			//
+        		};
         	};
-        	console.log("---========--- export user --------")
-        	console.log(exportuser)
         	return exportuser;
         };
 
@@ -297,8 +298,8 @@ angular.module('atpcms.controllers', [])
         $scope.addUser = function () { 
         	
         	var apiUser = prepareUserexport($scope.user);
-        	console.log(apiUser);
             UsersSrv.addUser(apiUser).success(successPostCallback).error(errorCallback); 
+           	_.delay(function(){prepareAdduser()}, 1000);
         }; 
 
         $scope.deleteUser = function (user) { 
@@ -306,13 +307,15 @@ angular.module('atpcms.controllers', [])
         }; 
 
         $scope.updateUser = function (user) { 
-        	var apiUser = prepareUserexport(user);
+        	var apiUser = prepareUserexport(user, $scope.useredit);
             UsersSrv.updateUser(apiUser).success(successCallback).error(errorCallback); 
         }; 
 
         UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback);
 
         prepareEdituser();
+
+        prepareAdduser();
 /*
         $scope.$watch("user.permissions.advertiser", function(){
         	alert($scope.user.permissions)
