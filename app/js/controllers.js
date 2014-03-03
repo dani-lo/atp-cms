@@ -90,20 +90,31 @@ angular.module('atpcms.controllers', [])
 
 		var onLoginSuccess = function(data) {
 			//
-			toaster.pop('success', "success", '<p>Your login was successful</p>', 5000, 'trustedHtml');
+			toaster.pop('success', "success", '<p>Your login was successful</p>', 2000, 'trustedHtml');
 
-			AppstateSrv.setParam('loggedin', true)
-			AppstateSrv.setParam('sid', data.sid)
+			AppstateSrv.setParam('loggedin', true);
+			AppstateSrv.setParam('sid', data.sid);
 
 			$location.path("home");
 		};
 
 		var onLoginError = function() {
 			//
-			toaster.pop('error', "error", '<p>Your login was unsuccessful</p>', 5000, 'trustedHtml');
+			toaster.pop('error', "error", '<p>Your login was unsuccessful</p>', 2000, 'trustedHtml');
 			
 		};
 	}])
+    /******************************************************************************
+    //////////////////////////////////////////// HomeCtrl
+    ******************************************************************************/
+    .controller('LogoutCtrl', ['$location', 'AppstateSrv', function($location, AppstateSrv) {
+        //
+        AppstateSrv.setParam('loggedin', false);
+        AppstateSrv.setParam('sid', null);
+        AppstateSrv.setParam('advertisers', null);
+        $location.path("login");
+        //return false;
+    }])
 	/******************************************************************************
   	//////////////////////////////////////////// UsersCtrl
   	******************************************************************************/
@@ -280,7 +291,7 @@ angular.module('atpcms.controllers', [])
         	var apiUser;
 
         	if(!validateEmail($scope.user.email)){
-        		toaster.pop('error', "Error", "<p>Please enter a valid email address</p>", 3000, 'trustedHtml');
+        		toaster.pop('error', "Error", "<p>Please enter a valid email address</p>", 2000, 'trustedHtml');
         		return false;
         	};
 
@@ -300,7 +311,7 @@ angular.module('atpcms.controllers', [])
         	var apiUser;
 
         	if(!validateEmail($scope.useredit[user.id].email)){
-        		toaster.pop('error', "Error", "<p>Please enter a valid email address</p>", 3000, 'trustedHtml');
+        		toaster.pop('error', "Error", "<p>Please enter a valid email address</p>", 2000, 'trustedHtml');
         		return false;
         	};
 

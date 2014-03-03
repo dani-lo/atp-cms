@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body>
-  <toaster-container></toaster-container>
+  <toaster-container toaster-options="{'time-out': 2000}"></toaster-container>
   <header>
     <ul class='menu main tabbed', ng-controller='NavCtrl')>
       <li ng-class="{activetab: chekLocation('/home'), visibletab : checkLoggedin()}"><a href="#/home">home</a></li>
