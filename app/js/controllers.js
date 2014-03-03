@@ -30,7 +30,7 @@ angular.module('atpcms.controllers', [])
 		    };
 		};
 
-		authCheck(null);//
+		authCheck(null);
 
 		$rootScope.$on("$routeChangeStart", authCheck);
 	}])
@@ -115,8 +115,6 @@ angular.module('atpcms.controllers', [])
 		
 		$scope.advertisers = AppstateSrv.getParam("advertisers");
 
-		$scope.currAdvertisers = {};
-
 		$scope.user = {
 			email : "",
 			admin : false,
@@ -187,33 +185,7 @@ angular.module('atpcms.controllers', [])
     		});
     	};
 
-
-        $scope.userHasMarket = function(user, checkMarket) {
-
-        	var userPermission, hasMarket = false;
-
-        	angular.forEach(user.permissions, function(advertiser){
-        		angular.forEach(advertiser, function(market){
-        			
-        			if(market == checkMarket){
-        				hasMarket = true;
-        			}
-        		})
-        	})
-
-        	return hasMarket;
-        }
-
-        $scope.toggleAddMode = function () { 
-            $scope.addMode = !$scope.addMode; 
-        }; 
-
-        $scope.toggleEditMode = function (user) { 
-
-            user.editMode = !user.editMode; 
-        }; 
-
-        var prepareUserexport = function(user, model){
+    	var prepareUserexport = function(user, model){
 
         	var exportuser = {},
 				permissionscopy = {};
@@ -335,6 +307,31 @@ angular.module('atpcms.controllers', [])
         	apiUser = prepareUserexport(user, $scope.useredit);
 
             UsersSrv.updateUser(apiUser).success(successCallback).error(errorCallback); 
+        };
+
+        $scope.userHasMarket = function(user, checkMarket) {
+
+        	var userPermission, hasMarket = false;
+
+        	angular.forEach(user.permissions, function(advertiser){
+        		angular.forEach(advertiser, function(market){
+        			
+        			if(market == checkMarket){
+        				hasMarket = true;
+        			}
+        		})
+        	})
+
+        	return hasMarket;
+        }
+
+        $scope.toggleAddMode = function () { 
+            $scope.addMode = !$scope.addMode; 
+        }; 
+
+        $scope.toggleEditMode = function (user) { 
+
+            user.editMode = !user.editMode; 
         }; 
 
         UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback);
