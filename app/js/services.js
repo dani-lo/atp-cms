@@ -38,22 +38,22 @@ services.service('AppstateSrv', function () {
 
 services.factory('UsersSrv', ['$http', 'AppstateSrv', function ($http, AppstateSrv) { 
 
-  	var url = "/api/users/";
+  	var url = "http://attribute2.com/api/users";
 
     return { 
         getUsers : function () { 
             return $http.get(url + "?sid=" + AppstateSrv.getParam("sid")); 
         }, 
         addUser : function (user) { 
-            user.sid = AppstateSrv.getParam("sid");
-            return $http.post(url, user); 
+            //user.sid = AppstateSrv.getParam("sid");
+            return $http.post(url + "?sid=" + AppstateSrv.getParam("sid"), user); 
         }, 
         deleteUser : function (user) { 
-            return $http.delete(url + user.id + "?sid=" + AppstateSrv.getParam("sid")); 
+            return $http.delete(url + "/" + user.id + "?sid=" + AppstateSrv.getParam("sid")); 
         }, 
         updateUser : function (user) { 
-            user.sid = AppstateSrv.getParam("sid");
-            return $http.put(url + user.id , user); 
+            //user.sid = AppstateSrv.getParam("sid");
+            return $http.put(url + "/" + user.id + "?sid=" + AppstateSrv.getParam("sid"), user); 
         } 
     }; 
 }]);

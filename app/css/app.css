@@ -85,6 +85,7 @@ td button {
 }
 .user-edit-row span.activespan {
   text-decoration: none;
+  font-weight : bold;
 }
 .advertiser-permissions span {
   padding-right : 8px;

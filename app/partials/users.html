@@ -23,13 +23,13 @@
                         <p><input ng-model="user.email" /></p>
                     </td>
                     <td>
-                        <p><input ng-model="user.admin" type="checkbox" /></p>
+                        <p><input ng-model="user.user_admin" type="checkbox" /></p>
                     </td>
                     <td class="permissions-cell">
                             <div ng-repeat="advertiserObj in advertisers">
                                 <p  class="advertiser-title">{{advertiserObj.advertiser.advertiserName}}</p>
                                 <div class="advertiser-permissions">
-                                    <span  ng-repeat="market in advertiserObj.markets" class="nested"><input type="checkbox" ng-model="user.permissions[advertiserObj.advertiser.advertiserID][market.marketID]" />{{market.marketName}}</span>
+                                    <span  ng-repeat="market in advertiserObj.markets" class="nested"><input type="checkbox" ng-model="user.data[advertiserObj.advertiser.advertiserID][market.marketID]" />{{market.marketName}}</span>
                                 </div>
                             </div>
                     </td> 
@@ -51,16 +51,16 @@
                         <p ng-show="user.editMode == true"><input ng-model="useredit[user.id].email" /> </p>
                     </td>
                     <td>
-                        <p ng-show="user.editMode == null || user.editMode == false">{{user.admin?"yes":"no"}}</p> 
+                        <p ng-show="user.editMode == null || user.editMode == false">{{user.user_admin == 1 ? "yes" : "no"}}</p> 
                         
-                        <p ng-show="user.editMode == true"><input ng-model="useredit[user.id].admin" type="checkbox" /></p>
+                        <p ng-show="user.editMode == true"><input ng-model="useredit[user.id].user_admin" ng-checked="user.user_admin == 1" type="checkbox" /></p>
                     </td>
                     <td class="permissions-cell">
                         <div class="user-edit-row" ng-repeat="advertiserObj in advertisers">
                             <p class="advertiser-title">{{advertiserObj.advertiser.advertiserName}}</span>
                             <div class="advertiser-permissions">
-                                <span ng-class="{editable: user.editMode == true, activespan : userHasMarket(user, market.marketID)}" ng-repeat="market in advertiserObj.markets" class="nested">
-                                    <input type="checkbox" ng-checked="userHasMarket(user, market.marketID)" ng-model="useredit[user.id].permissions[advertiserObj.advertiser.advertiserID][market.marketID]" />{{market.marketName}}
+                                <span ng-class="{editable: user.editMode == true, activespan : userHasMarket(user, market.marketID, advertiserObj.advertiser.advertiserID)}" ng-repeat="market in advertiserObj.markets" class="nested">
+                                    <input type="checkbox" ng-checked="userHasMarket(user, market.marketID, advertiserObj.advertiser.advertiserID)" ng-model="useredit[user.id].data[advertiserObj.advertiser.advertiserID][market.marketID]" />{{market.marketName}}
                                 </span>
                             </div>
                         </div>

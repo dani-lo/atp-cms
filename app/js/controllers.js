@@ -128,54 +128,42 @@ angular.module('atpcms.controllers', [])
 
 		$scope.user = {
 			email : "",
-			admin : false,
-			permissions : {}
+			user_admin : false,
+			data : {}
 		};
 
 		$scope.useredit = {};
 
-		$scope.users = [
-			{
-				id : 1,
-				email : "johnsmith@foo.com",
-				admin : false,
-				permissions : {
-					"101" : ["104848"]
-				}
-			},
-			{
-				id : 2,
-				email : "marybrown@baz.com",
-				admin : false,
-				permissions : {
-					"101" : ["104848"]
-				}
-			}
-		]; 
+		$scope.users = [];
 
         $scope.addMode = true; 
 
-        var prepareEdituser = function() {
+        var prepareEditusers = function() {
 
         	_.each($scope.users, function(user){
+
+                var userdata = user.data;
+
         		$scope.useredit[user.id] = {
-        			permissions : {},
+        			data : {},
         			email : user.email,
-        			admin : false
+        			user_admin : user.user_admin
         		};
+
         		angular.forEach($scope.advertisers, function(advertiserObj){
-        			
-        			$scope.useredit[user.id].permissions[advertiserObj.advertiser.advertiserID] = {};
-        			
+        			$scope.useredit[user.id].data[advertiserObj.advertiser.advertiserID] = {};
+
         			_.each(advertiserObj.markets, function(market){
 
-        				var marketId = market.marketID;
+                        var marketId = market.marketID,
+                            advertiserID = advertiserObj.advertiser.advertiserID;//$.parseJSON(user.data);
 
-        				if(_.indexOf(user.permissions[advertiserObj.advertiser.advertiserID], marketId) !== -1 || user.permissions[advertiserObj.advertiser.advertiserID] === true){
-        					$scope.useredit[user.id].permissions[advertiserObj.advertiser.advertiserID][marketId] = true;
+        				if($scope.userHasMarket(user, marketId, advertiserID)){
+                            $scope.useredit[user.id].data[advertiserID][marketId] = true;
         				} else {
-        					$scope.useredit[user.id].permissions[advertiserObj.advertiser.advertiserID][marketId] = false;
-        				}
+        					$scope.useredit[user.id].data[advertiserID][marketId] = false;
+        				};
+
         			});
         		});
         	});
@@ -185,13 +173,13 @@ angular.module('atpcms.controllers', [])
 
     		angular.forEach($scope.advertisers, function(advertiserObj){
     			
-    			$scope.user.permissions[advertiserObj.advertiser.advertiserID] = {};
+    			$scope.user.data[advertiserObj.advertiser.advertiserID] = {};
     			
     			_.each(advertiserObj.markets, function(market){
 
     				var marketId = market.marketID;
 
-    				$scope.user.permissions[advertiserObj.advertiser.advertiserID][marketId] = false;
+    				$scope.user.data[advertiserObj.advertiser.advertiserID][marketId] = false;
     			});
     		});
     	};
@@ -208,24 +196,30 @@ angular.module('atpcms.controllers', [])
 	        		if(userID == user.id) {
 	        			exportuser = {
 	        				id : userID,
-	        				permissions : model[userID].permissions,
+	        				data : model[userID].data,
 	        				email : model[userID].email,
-	        				admin : model[userID].admin
+	        				user_admin : model[userID].user_admin ? "1" : "0"
 	        			};
 
 	        			exportuser.id = user.id;
 
-	        			permissionscopy[userID] = _.clone(model[userID].permissions);
+	        			permissionscopy[userID] = _.clone(model[userID].data);
 	        		};
 	        	};
 			} else {
 				exportuser = $scope.user;
-				permissionscopy = _.clone($scope.user.permissions);
+				permissionscopy = _.clone($scope.user.data);
 			};
         	
-        	for(var advID in exportuser.permissions){
+        	for(var advID in exportuser.data){
         		
-        		var hasAllMarkets = true;
+        		var hasAllMarkets = true, apimarkets = [];
+
+                for(var marketid in exportuser.data[advID]){
+                    if(exportuser.data[advID][marketid] == true){
+                        apimarkets.push(marketid);
+                    }
+                };
 
         		angular.forEach($scope.advertisers, function(advertiserObj){
 
@@ -235,7 +229,7 @@ angular.module('atpcms.controllers', [])
         				
         				angular.forEach(allmarkets, function(market){
 
-        					if(exportuser.permissions[advID][market.marketID] == false){
+        					if(exportuser.data[advID][market.marketID] == false){
         						hasAllMarkets = false;
         					};
         				});
@@ -244,15 +238,21 @@ angular.module('atpcms.controllers', [])
 
         		if(hasAllMarkets){
     				//
-           			exportuser.permissions[advID] = true;
+           			exportuser.data[advID] = true;
 
         			if(model){
-        				$scope.useredit[exportuser.id].permissions = permissionscopy[exportuser.id];
+        				$scope.useredit[exportuser.id].data = permissionscopy[exportuser.id];
         			} else {
-        				
+        				//
         			};
-        		} else {
-        			//
+        		} else if(apimarkets.length){
+        			exportuser.data[advID] = apimarkets;
+
+                    if(model){
+                        $scope.useredit[exportuser.id].data = permissionscopy[exportuser.id];
+                    } else {
+                        //
+                    };
         		};
         	};
         	return exportuser;
@@ -265,10 +265,13 @@ angular.module('atpcms.controllers', [])
 
         var getUsersSuccessCallback = function (data, status) { 
             $scope.users = data; 
+
+            prepareEditusers();
         }; 
 
         var successCallback = function (data, status, headers, config) { 
             
+            toaster.pop('success', "Success", "<p>The operation was successful</p>", 2000, 'trustedHtml');
             return UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback); 
         }; 
 
@@ -317,21 +320,37 @@ angular.module('atpcms.controllers', [])
 
         	apiUser = prepareUserexport(user, $scope.useredit);
 
+            //console.log("PREPARED USER!!!")
+            //console.log(apiUser)
+
             UsersSrv.updateUser(apiUser).success(successCallback).error(errorCallback); 
         };
 
-        $scope.userHasMarket = function(user, checkMarket) {
+        $scope.userHasMarket = function(user, checkMarket, parentAdvertiser) {
 
         	var userPermission, hasMarket = false;
 
-        	angular.forEach(user.permissions, function(advertiser){
-        		angular.forEach(advertiser, function(market){
-        			
-        			if(market == checkMarket){
-        				hasMarket = true;
-        			}
-        		})
-        	})
+            if(user.data === true || user.data === "true") {
+                hasMarket = true;
+            } else {
+                for(var advertiser in user.data){
+
+                    if(advertiser == parentAdvertiser){
+                        if(user.data[advertiser] === true || user.data[advertiser] === "true") {
+                            hasMarket = true;
+                        } else if(user.data[advertiser]) {
+                            angular.forEach(user.data[advertiser], function(market){
+                            
+                                if(market == checkMarket){
+                                    hasMarket = true;
+                                };
+                            });
+                        };
+                    };
+                };
+            };
+
+        	
 
         	return hasMarket;
         }
@@ -346,8 +365,6 @@ angular.module('atpcms.controllers', [])
         }; 
 
         UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback);
-
-        prepareEdituser();
 
         prepareAdduser();
 	}]);
