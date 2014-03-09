@@ -103,7 +103,9 @@ tr.user-add-row{
 p.advertiser-title{
   margin-bottom: 2px;
 }
-
+.nonvisible {
+  display :none;
+}
 
 
 

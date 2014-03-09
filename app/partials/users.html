@@ -23,7 +23,7 @@
                         <p><input ng-model="user.email" /></p>
                     </td>
                     <td>
-                        <p><input ng-model="user.user_admin" type="checkbox" /></p>
+                        <p><input ng-class="{nonvisible: !isSuperadmin()}" ng-model="user.user_admin" type="checkbox" /><span  ng-class="{nonvisible: isSuperadmin()}" >--</span></p>
                     </td>
                     <td class="permissions-cell">
                             <div ng-repeat="advertiserObj in advertisers">
@@ -53,7 +53,7 @@
                     <td>
                         <p ng-show="user.editMode == null || user.editMode == false">{{user.user_admin == 1 ? "yes" : "no"}}</p> 
                         
-                        <p ng-show="user.editMode == true"><input ng-model="useredit[user.id].user_admin" ng-checked="user.user_admin == 1" type="checkbox" /></p>
+                        <p ng-show="user.editMode == true && isSuperadmin()"><input ng-model="useredit[user.id].user_admin" ng-checked="user.user_admin == 1" type="checkbox" /><span ng-show="user.editMode == true && !isSuperadmin()">---</span></p>
                     </td>
                     <td class="permissions-cell">
                         <div class="user-edit-row" ng-repeat="advertiserObj in advertisers">

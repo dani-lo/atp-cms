@@ -25,7 +25,8 @@ services.service('AppstateSrv', function () {
     this.params = {
         loggedin : false,
         sid : null,
-        advertisers : null
+        advertisers : null,
+        superadmin : false
     };
     this.setParam = function(param, val){
         //

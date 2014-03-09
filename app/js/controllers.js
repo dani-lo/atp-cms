@@ -94,6 +94,7 @@ angular.module('atpcms.controllers', [])
 
 			AppstateSrv.setParam('loggedin', true);
 			AppstateSrv.setParam('sid', data.sid);
+            AppstateSrv.setParam('superadmin', true);
 
 			$location.path("home");
 		};
@@ -112,6 +113,7 @@ angular.module('atpcms.controllers', [])
         AppstateSrv.setParam('loggedin', false);
         AppstateSrv.setParam('sid', null);
         AppstateSrv.setParam('advertisers', null);
+        AppstateSrv.setParam('superadmin', false);
         $location.path("login");
         //return false;
     }])
@@ -353,7 +355,12 @@ angular.module('atpcms.controllers', [])
         	
 
         	return hasMarket;
-        }
+        };
+
+        $scope.isSuperadmin = function() {
+            //
+            return AppstateSrv.getParam("superadmin");
+        };
 
         $scope.toggleAddMode = function () { 
             $scope.addMode = !$scope.addMode; 
