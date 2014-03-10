@@ -5,14 +5,14 @@
             <table class="table table-striped table-bordered table-condensed table-hover"> 
                 <tr> 
                     <th style="width: 100px;"> 
-                        <div class="btn-toolbar"><button ng-click="toggleAddMode()">{{addMode?"Hide user add row":"Show user add row"}}</button></div> 
+                        <div ng-show="(isAdmin() || isSuperadmin())" class="btn-toolbar"><button ng-click="toggleAddMode()">{{addMode?"Hide user add row":"Show user add row"}}</button></div> 
                     </th> 
                     <th style="width: 50px;">Id</th> 
                     <th>Email</th> 
                     <th>Administrator</th> 
                     <th>Advertisers Markets Permissions</th>
                 </tr> 
-                <tr ng-show="addMode"  class="user-add-row"> 
+                <tr ng-show="addMode && (isAdmin() || isSuperadmin())"  class="user-add-row"> 
                     <td> 
                         <div class="btn-toolbar"> 
                                 <button ng-click="addUser()">Add</button> 
@@ -36,11 +36,11 @@
                 </tr> 
                 <tr class="user-edit-row" ng-repeat="user in users | orderBy:'id':true"> 
                     <td> 
-                        <div class="btn-toolbar" ng-show="user.editMode == null || user.editMode == false"> 
+                        <div ng-show="isAdmin() || isSuperadmin()" class="btn-toolbar" ng-show="user.editMode == null || user.editMode == false"> 
                             <button ng-click="toggleEditMode(user)">Edit</button> 
                             <button ng-click="deleteUser(user)">Delete</button> 
                         </div> 
-                        <div class="btn-toolbar" ng-show="user.editMode == true"> 
+                        <div class="btn-toolbar" ng-show="user.editMode == true && (isAdmin() || isSuperadmin())"> 
                                 <button ng-click="toggleEditMode(user)">Cancel</i> 
                                 <button ng-click="updateUser(user)">Update</i> 
                         </div> 

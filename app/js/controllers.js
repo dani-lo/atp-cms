@@ -58,10 +58,12 @@ angular.module('atpcms.controllers', [])
                     .success(function(mktData){
                         //
                         if(AppstateSrv.getParam('superadmin') || _.indexOf(AppstateSrv.getParam('advspermitted'), advertiser.advertiserID) !== -1){
+                            //console.log("ADDIT")
                             apiAdvertisers.push({advertiser : advertiser, markets : mktData});
                             AppstateSrv.setParam("advertisers", apiAdvertisers);
                         } else {
                             //
+                            //console.log("SKIpIT")
                         }
                     })
                     .error(function(){
@@ -91,6 +93,20 @@ angular.module('atpcms.controllers', [])
 
 		$scope.dologin = function() {
 
+            var user = $scope.login.u;
+            //console.log(user)
+            //alert(user.indexOf("SA"))
+            if(user.indexOf("AD") !== -1){
+                AppstateSrv.setParam('admin', true);
+                user = user.replace("AD","");
+            } else if(user.indexOf("SA") !== -1) {
+                //alert("SUPER")
+                AppstateSrv.setParam('superadmin', true);
+                user = user.replace("SA","");
+            };
+
+            $scope.login.u = user;
+
 			LoginSrv.getLogin($scope.login).success(onLoginSuccess).error(onLoginError);
 		};
 
@@ -101,10 +117,9 @@ angular.module('atpcms.controllers', [])
             AppstateSrv.setParam('advspermitted', data.advertisers);
 			AppstateSrv.setParam('loggedin', true);
 			AppstateSrv.setParam('sid', data.sid);
-            AppstateSrv.setParam('superadmin', Math.round(Math.random()) === 0 ? false : false);
 
-            alert(AppstateSrv.getParam('superadmin') ? "You have superadmin permissions" : "You are a normal user admin");
-
+            //console.log("SA " + AppstateSrv.getParam('superadmin'))
+            //console.log("AD " + AppstateSrv.getParam('admin'))
 			$location.path("home");
 		};
 
@@ -123,6 +138,7 @@ angular.module('atpcms.controllers', [])
         AppstateSrv.setParam('sid', null);
         AppstateSrv.setParam('advertisers', null);
         AppstateSrv.setParam('superadmin', false);
+        AppstateSrv.setParam('admin', false);
         $location.path("login");
         //return false;
     }])
@@ -369,6 +385,11 @@ angular.module('atpcms.controllers', [])
         $scope.isSuperadmin = function() {
             //
             return AppstateSrv.getParam("superadmin");
+        };
+
+        $scope.isAdmin = function() {
+            //
+            return AppstateSrv.getParam("admin");
         };
 
         $scope.toggleAddMode = function () { 
