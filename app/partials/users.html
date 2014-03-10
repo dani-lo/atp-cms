@@ -53,7 +53,7 @@
                     <td>
                         <p ng-show="user.editMode == null || user.editMode == false">{{user.user_admin == 1 ? "yes" : "no"}}</p> 
                         
-                        <p ng-show="user.editMode == true && isSuperadmin()"><input ng-model="useredit[user.id].user_admin" ng-checked="user.user_admin == 1" type="checkbox" /><span ng-show="user.editMode == true && !isSuperadmin()">---</span></p>
+                        <p><input ng-model="useredit[user.id].user_admin" ng-checked="user.user_admin == 1" type="checkbox" ng-show="user.editMode == true && isSuperadmin()" /><span ng-show="user.editMode == true && !isSuperadmin()">---</span></p>
                     </td>
                     <td class="permissions-cell">
                         <div class="user-edit-row" ng-repeat="advertiserObj in advertisers">

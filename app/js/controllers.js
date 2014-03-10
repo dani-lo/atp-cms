@@ -53,16 +53,22 @@ angular.module('atpcms.controllers', [])
 				
 				angular.forEach(advData, function(advertiser){
 					//
-					MarketsSrv
-					.getMarkets(advertiser.advertiserID)
-					.success(function(mktData){
-						//
-						apiAdvertisers.push({advertiser : advertiser, markets : mktData});
-						AppstateSrv.setParam("advertisers", apiAdvertisers);
-					})
-					.error(function(){
-						// die silently
-					})
+                    //
+                    MarketsSrv.getMarkets(advertiser.advertiserID)
+                    .success(function(mktData){
+                        //
+                        if(AppstateSrv.getParam('superadmin') || _.indexOf(AppstateSrv.getParam('advspermitted'), advertiser.advertiserID) !== -1){
+                            apiAdvertisers.push({advertiser : advertiser, markets : mktData});
+                            AppstateSrv.setParam("advertisers", apiAdvertisers);
+                        } else {
+                            //
+                        }
+                    })
+                    .error(function(){
+                        // die silently
+                    })
+                    
+					
 				});
 			})
 			.error(function(){
@@ -92,9 +98,12 @@ angular.module('atpcms.controllers', [])
 			//
 			toaster.pop('success', "success", '<p>Your login was successful</p>', 2000, 'trustedHtml');
 
+            AppstateSrv.setParam('advspermitted', data.advertisers);
 			AppstateSrv.setParam('loggedin', true);
 			AppstateSrv.setParam('sid', data.sid);
-            AppstateSrv.setParam('superadmin', true);
+            AppstateSrv.setParam('superadmin', Math.round(Math.random()) === 0 ? false : false);
+
+            alert(AppstateSrv.getParam('superadmin') ? "You have superadmin permissions" : "You are a normal user admin");
 
 			$location.path("home");
 		};
