@@ -215,7 +215,8 @@ angular.module('atpcms.controllers', [])
 
         	var exportuser = {},
 				permissionscopy = {};
-
+            //console.log($scope.user.data)
+            //return false;
 			if(model) {
 				//
 				console.log(model)
@@ -234,10 +235,14 @@ angular.module('atpcms.controllers', [])
 	        		};
 	        	};
 			} else {
-				exportuser = $scope.user;
-				permissionscopy = _.clone($scope.user.data);
+				exportuser = user;
+				permissionscopy = _.clone(user.data);
+                //
+
+                //console.log(exportuser)
+            //return false;
 			};
-        	
+
         	for(var advID in exportuser.data){
         		
         		var hasAllMarkets = true, apimarkets = [];
@@ -282,6 +287,7 @@ angular.module('atpcms.controllers', [])
                     };
         		};
         	};
+            //console.log(exportuser)
         	return exportuser;
         };
 
@@ -299,6 +305,7 @@ angular.module('atpcms.controllers', [])
         var successCallback = function (data, status, headers, config) { 
             
             toaster.pop('success', "Success", "<p>The operation was successful</p>", 2000, 'trustedHtml');
+            prepareAdduser();
             return UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback); 
         }; 
 
@@ -324,11 +331,14 @@ angular.module('atpcms.controllers', [])
         		toaster.pop('error', "Error", "<p>Please enter a valid email address</p>", 2000, 'trustedHtml');
         		return false;
         	};
-
+            //console.log($scope.user)
+            //return false;   
         	apiUser = prepareUserexport($scope.user);
 
+            //console.log(apiUser)
+
             UsersSrv.addUser(apiUser).success(successPostCallback).error(errorCallback); 
-           	_.delay(function(){prepareAdduser()}, 1000);
+           	//_.delay(function(){prepareAdduser()}, 1000);
         }; 
 
         $scope.deleteUser = function (user) { 
@@ -376,8 +386,6 @@ angular.module('atpcms.controllers', [])
                     };
                 };
             };
-
-        	
 
         	return hasMarket;
         };
