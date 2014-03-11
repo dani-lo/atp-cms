@@ -94,16 +94,6 @@ angular.module('atpcms.controllers', [])
 		$scope.dologin = function() {
 
             var user = $scope.login.u;
-            //console.log(user)
-            //alert(user.indexOf("SA"))
-            if(user.indexOf("AD") !== -1){
-                AppstateSrv.setParam('admin', true);
-                user = user.replace("AD","");
-            } else if(user.indexOf("SA") !== -1) {
-                //alert("SUPER")
-                AppstateSrv.setParam('superadmin', true);
-                user = user.replace("SA","");
-            };
 
             $scope.login.u = user;
 
@@ -117,7 +107,8 @@ angular.module('atpcms.controllers', [])
             AppstateSrv.setParam('advspermitted', data.advertisers);
 			AppstateSrv.setParam('loggedin', true);
 			AppstateSrv.setParam('sid', data.sid);
-
+            AppstateSrv.setParam('admin',  data.admin === "1" ? true : false);
+            AppstateSrv.setParam('superadmin', data.super_admin === "1" ? true : false);
             //console.log("SA " + AppstateSrv.getParam('superadmin'))
             //console.log("AD " + AppstateSrv.getParam('admin'))
 			$location.path("home");
