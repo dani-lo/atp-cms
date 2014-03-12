@@ -9,6 +9,7 @@
                     </th> 
                     <th style="width: 50px;">Id</th> 
                     <th>Email</th> 
+                    <th>Password</th>
                     <th>Administrator</th> 
                     <th>Advertisers Markets Permissions</th>
                 </tr> 
@@ -21,6 +22,9 @@
                     <td></td> 
                     <td> 
                         <p><input ng-model="user.email" /></p>
+                    </td>
+                    <td> 
+                        <p><input ng-model="user.password" /></p>
                     </td>
                     <td>
                         <p><input ng-class="{nonvisible: !isSuperadmin()}" ng-model="user.user_admin" type="checkbox" /><span  ng-class="{nonvisible: isSuperadmin()}" >--</span></p>
@@ -49,6 +53,12 @@
                     <td> 
                         <p ng-show="user.editMode == null || user.editMode == false">{{user.email}}</p> 
                         <p ng-show="user.editMode == true"><input ng-model="useredit[user.id].email" /> </p>
+                    </td>
+                    <td> 
+                        
+                        <p ng-show="user.editMode == null || user.editMode == false">{{user.password}}</p> 
+                        <p ng-show="user.editMode == true"><input ng-model="useredit[user.id].password" /> </p>
+                        
                     </td>
                     <td>
                         <p ng-show="user.editMode == null || user.editMode == false">{{user.user_admin == 1 ? "yes" : "no"}}</p> 

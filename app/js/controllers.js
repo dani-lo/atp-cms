@@ -147,7 +147,9 @@ angular.module('atpcms.controllers', [])
 		$scope.user = {
 			email : "",
 			user_admin : false,
-			data : {}
+            password : "",
+			data : {},
+            groups : [1,2]
 		};
 
 		$scope.useredit = {};
@@ -165,7 +167,8 @@ angular.module('atpcms.controllers', [])
         		$scope.useredit[user.id] = {
         			data : {},
         			email : user.email,
-        			user_admin : user.user_admin
+        			user_admin : user.user_admin,
+                    password : user.password
         		};
 
         		angular.forEach($scope.advertisers, function(advertiserObj){
@@ -217,6 +220,7 @@ angular.module('atpcms.controllers', [])
 	        				id : userID,
 	        				data : model[userID].data,
 	        				email : model[userID].email,
+                            password : model[userID].password,
 	        				user_admin : model[userID].user_admin ? "1" : "0"
 	        			};
 
@@ -325,7 +329,6 @@ angular.module('atpcms.controllers', [])
             //console.log($scope.user)
             //return false;   
         	apiUser = prepareUserexport($scope.user);
-
             //console.log(apiUser)
 
             UsersSrv.addUser(apiUser).success(successPostCallback).error(errorCallback); 
