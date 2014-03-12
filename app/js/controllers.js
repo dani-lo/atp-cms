@@ -37,7 +37,7 @@ angular.module('atpcms.controllers', [])
 	/******************************************************************************
   	//////////////////////////////////////////// HomeCtrl
   	******************************************************************************/
-	.controller('HomeCtrl', ['$scope', 'AppstateSrv', 'AdvertisersSrv', 'MarketsSrv',function($scope, AppstateSrv, AdvertisersSrv, MarketsSrv) {
+	.controller('HomeCtrl', ['$scope', 'AppstateSrv', 'AdvertisersSrv', 'MarketsSrv','GroupsSrv', function($scope, AppstateSrv, AdvertisersSrv, MarketsSrv, GroupsSrv) {
 		//
 		if(!AppstateSrv.getParam("loggedin")){
 			return false;
@@ -68,16 +68,21 @@ angular.module('atpcms.controllers', [])
                     })
                     .error(function(){
                         // die silently
-                    })
-                    
-					
+                    });
 				});
 			})
 			.error(function(){
 				//
 				alert("error fetching advertisers");
 			});
-		}
+		};
+        //
+        GroupsSrv.getGroups().success(function(groupsData){
+            //
+            AppstateSrv.setParam("groups", groupsData);
+        }).error(function(){
+            alert("error fetching groups")
+        });
 	}])
 	/******************************************************************************
   	//////////////////////////////////////////// HomeCtrl
@@ -109,8 +114,7 @@ angular.module('atpcms.controllers', [])
 			AppstateSrv.setParam('sid', data.sid);
             AppstateSrv.setParam('admin',  data.admin === "1" ? true : false);
             AppstateSrv.setParam('superadmin', data.super_admin === "1" ? true : false);
-            //console.log("SA " + AppstateSrv.getParam('superadmin'))
-            //console.log("AD " + AppstateSrv.getParam('admin'))
+            
 			$location.path("home");
 		};
 
@@ -127,11 +131,18 @@ angular.module('atpcms.controllers', [])
         //
         AppstateSrv.setParam('loggedin', false);
         AppstateSrv.setParam('sid', null);
-        AppstateSrv.setParam('advertisers', null);
+        AppstateSrv.setParam('advertisers', []);
+        AppstateSrv.setParam('groups', []);
         AppstateSrv.setParam('superadmin', false);
         AppstateSrv.setParam('admin', false);
         $location.path("login");
         //return false;
+    }])
+    /******************************************************************************
+    //////////////////////////////////////////// UsersCtrl
+    ******************************************************************************/
+    .controller('GroupsCtrl', ['$scope', 'toaster', 'GroupsSrv', 'AppstateSrv', function($scope, toaster, GroupsSrv, AppstateSrv) {
+        //
     }])
 	/******************************************************************************
   	//////////////////////////////////////////// UsersCtrl

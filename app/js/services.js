@@ -25,9 +25,10 @@ services.service('AppstateSrv', function () {
     this.params = {
         loggedin : false,
         sid : null,
-        advertisers : null,
+        advertisers : [],
         superadmin : false,
-        admin : false
+        admin : false,
+        groups : []
     };
     this.setParam = function(param, val){
         //
@@ -56,6 +57,28 @@ services.factory('UsersSrv', ['$http', 'AppstateSrv', function ($http, AppstateS
         updateUser : function (user) { 
             //user.sid = AppstateSrv.getParam("sid");
             return $http.put(url + "/" + user.id + "?sid=" + AppstateSrv.getParam("sid"), user); 
+        } 
+    }; 
+}]);
+
+services.factory('GroupsSrv', ['$http', 'AppstateSrv', function ($http, AppstateSrv) { 
+
+    var url = "http://attribute2.com/api/groups";
+
+    return { 
+        getGroups : function () { 
+            return $http.get(url + "?sid=" + AppstateSrv.getParam("sid")); 
+        }, 
+        addGroup : function (group) { 
+            //user.sid = AppstateSrv.getParam("sid");
+            return $http.post(url + "?sid=" + AppstateSrv.getParam("sid"), group); 
+        }, 
+        deleteGroup : function (group) { 
+            return $http.delete(url + "/" + group.id + "?sid=" + AppstateSrv.getParam("sid")); 
+        }, 
+        updateGroup : function (group) { 
+            //user.sid = AppstateSrv.getParam("sid");
+            return $http.put(url + "/" + group.id + "?sid=" + AppstateSrv.getParam("sid"), group); 
         } 
     }; 
 }]);

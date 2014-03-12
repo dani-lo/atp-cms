@@ -1,0 +1,41 @@
+<h2>Groups Operations</h2>
+<p>This is the atp cms for groups management.</p>
+<div ng-controller="GroupsCtrl" ng-cloak> 
+    <table class="table table-striped table-bordered table-condensed table-hover"> 
+                <tr> 
+                    <th style="width: 100px;"> 
+                        <div ng-show="(isAdmin() || isSuperadmin())" class="btn-toolbar"><button ng-click="toggleAddMode()">{{addMode?"Hide user add row":"Show user add row"}}</button></div> 
+                    </th> 
+                    <th style="width: 50px;">Id</th> 
+                    <th>Name</th> 
+                </tr> 
+                <tr ng-show="addMode && (isAdmin() || isSuperadmin())"  class="user-add-row"> 
+                    <td> 
+                        <div class="btn-toolbar"> 
+                                <button ng-click="addUser()">Add</button> 
+                        </div> 
+                    </td> 
+                    <td></td> 
+                    <td> 
+                        <p><input ng-model="user.name" /></p>
+                    </td>
+                </tr> 
+                <tr class="user-edit-row" ng-repeat="group in groups | orderBy:'id':true"> 
+                    <td> 
+                        <div ng-show="isAdmin() || isSuperadmin()" class="btn-toolbar" ng-show="group.editMode == null || group.editMode == false"> 
+                            <button ng-click="toggleEditMode(group)">Edit</button> 
+                            <button ng-click="deleteGroup(group)">Delete</button> 
+                        </div> 
+                        <div class="btn-toolbar" ng-show="group.editMode == true && (isAdmin() || isSuperadmin())"> 
+                                <button ng-click="toggleEditMode(group)">Cancel</i> 
+                                <button ng-click="updateGroup(group)">Update</i> 
+                        </div> 
+                    </td> 
+                    <td>{{user.id}}</td> 
+                    <td> 
+                        <p ng-show="group.editMode == null || group.editMode == false">{{group.name}}</p> 
+                        <p ng-show="group.editMode == true"><input ng-model="groups[group.id].name" /> </p>
+                    </td>
+                </tr> 
+            </table>    
+</div> 

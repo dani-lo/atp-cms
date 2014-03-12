@@ -1,81 +1,79 @@
 <h2>Users Operations</h2>
 <p>This is the atp cms for users management.</p>
 <div ng-controller="UsersCtrl" ng-cloak> 
-        <div> 
-            <table class="table table-striped table-bordered table-condensed table-hover"> 
-                <tr> 
-                    <th style="width: 100px;"> 
-                        <div ng-show="(isAdmin() || isSuperadmin())" class="btn-toolbar"><button ng-click="toggleAddMode()">{{addMode?"Hide user add row":"Show user add row"}}</button></div> 
-                    </th> 
-                    <th style="width: 50px;">Id</th> 
-                    <th>Email</th> 
-                    <th>Password</th>
-                    <th>Administrator</th> 
-                    <th>Advertisers Markets Permissions</th>
-                </tr> 
-                <tr ng-show="addMode && (isAdmin() || isSuperadmin())"  class="user-add-row"> 
-                    <td> 
-                        <div class="btn-toolbar"> 
-                                <button ng-click="addUser()">Add</button> 
-                        </div> 
-                    </td> 
-                    <td></td> 
-                    <td> 
-                        <p><input ng-model="user.email" /></p>
-                    </td>
-                    <td> 
-                        <p><input ng-model="user.password" /></p>
-                    </td>
-                    <td>
-                        <p><input ng-class="{nonvisible: !isSuperadmin()}" ng-model="user.user_admin" type="checkbox" /><span  ng-class="{nonvisible: isSuperadmin()}" >--</span></p>
-                    </td>
-                    <td class="permissions-cell">
-                            <div ng-repeat="advertiserObj in advertisers">
-                                <p  class="advertiser-title">{{advertiserObj.advertiser.advertiserName}}</p>
-                                <div class="advertiser-permissions">
-                                    <span  ng-repeat="market in advertiserObj.markets" class="nested"><input type="checkbox" ng-model="user.data[advertiserObj.advertiser.advertiserID][market.marketID]" />{{market.marketName}}</span>
-                                </div>
-                            </div>
-                    </td> 
-                </tr> 
-                <tr class="user-edit-row" ng-repeat="user in users | orderBy:'id':true"> 
-                    <td> 
-                        <div ng-show="isAdmin() || isSuperadmin()" class="btn-toolbar" ng-show="user.editMode == null || user.editMode == false"> 
-                            <button ng-click="toggleEditMode(user)">Edit</button> 
-                            <button ng-click="deleteUser(user)">Delete</button> 
-                        </div> 
-                        <div class="btn-toolbar" ng-show="user.editMode == true && (isAdmin() || isSuperadmin())"> 
-                                <button ng-click="toggleEditMode(user)">Cancel</i> 
-                                <button ng-click="updateUser(user)">Update</i> 
-                        </div> 
-                    </td> 
-                    <td>{{user.id}}</td> 
-                    <td> 
-                        <p ng-show="user.editMode == null || user.editMode == false">{{user.email}}</p> 
-                        <p ng-show="user.editMode == true"><input ng-model="useredit[user.id].email" /> </p>
-                    </td>
-                    <td> 
-                        
-                        <p ng-show="user.editMode == null || user.editMode == false">{{user.password}}</p> 
-                        <p ng-show="user.editMode == true"><input ng-model="useredit[user.id].password" /> </p>
-                        
-                    </td>
-                    <td>
-                        <p ng-show="user.editMode == null || user.editMode == false">{{user.user_admin == 1 ? "yes" : "no"}}</p> 
-                        
-                        <p><input ng-model="useredit[user.id].user_admin" ng-checked="user.user_admin == 1" type="checkbox" ng-show="user.editMode == true && isSuperadmin()" /><span ng-show="user.editMode == true && !isSuperadmin()">---</span></p>
-                    </td>
-                    <td class="permissions-cell">
-                        <div class="user-edit-row" ng-repeat="advertiserObj in advertisers">
-                            <p class="advertiser-title">{{advertiserObj.advertiser.advertiserName}}</span>
-                            <div class="advertiser-permissions">
-                                <span ng-class="{editable: user.editMode == true, activespan : userHasMarket(user, market.marketID, advertiserObj.advertiser.advertiserID)}" ng-repeat="market in advertiserObj.markets" class="nested">
-                                    <input type="checkbox" ng-checked="userHasMarket(user, market.marketID, advertiserObj.advertiser.advertiserID)" ng-model="useredit[user.id].data[advertiserObj.advertiser.advertiserID][market.marketID]" />{{market.marketName}}
-                                </span>
-                            </div>
+    <table class="table table-striped table-bordered table-condensed table-hover"> 
+        <tr> 
+            <th style="width: 100px;"> 
+                <div ng-show="(isAdmin() || isSuperadmin())" class="btn-toolbar"><button ng-click="toggleAddMode()">{{addMode?"Hide user add row":"Show user add row"}}</button></div> 
+            </th> 
+            <th style="width: 50px;">Id</th> 
+            <th>Email</th> 
+            <th>Password</th>
+            <th>Administrator</th> 
+            <th>Advertisers Markets Permissions</th>
+        </tr> 
+        <tr ng-show="addMode && (isAdmin() || isSuperadmin())"  class="user-add-row"> 
+            <td> 
+                <div class="btn-toolbar"> 
+                        <button ng-click="addUser()">Add</button> 
+                </div> 
+            </td> 
+            <td></td> 
+            <td> 
+                <p><input ng-model="user.email" /></p>
+            </td>
+            <td> 
+                <p><input ng-model="user.password" /></p>
+            </td>
+            <td>
+                <p><input ng-class="{nonvisible: !isSuperadmin()}" ng-model="user.user_admin" type="checkbox" /><span  ng-class="{nonvisible: isSuperadmin()}" >--</span></p>
+            </td>
+            <td class="permissions-cell">
+                    <div ng-repeat="advertiserObj in advertisers">
+                        <p  class="advertiser-title">{{advertiserObj.advertiser.advertiserName}}</p>
+                        <div class="advertiser-permissions">
+                            <span  ng-repeat="market in advertiserObj.markets" class="nested"><input type="checkbox" ng-model="user.data[advertiserObj.advertiser.advertiserID][market.marketID]" />{{market.marketName}}</span>
                         </div>
-                    </td> 
-                </tr> 
-            </table> 
-        </div> 
-    </div> 
+                    </div>
+            </td> 
+        </tr> 
+        <tr class="user-edit-row" ng-repeat="user in users | orderBy:'id':true"> 
+            <td> 
+                <div ng-show="isAdmin() || isSuperadmin()" class="btn-toolbar" ng-show="user.editMode == null || user.editMode == false"> 
+                    <button ng-click="toggleEditMode(user)">Edit</button> 
+                    <button ng-click="deleteUser(user)">Delete</button> 
+                </div> 
+                <div class="btn-toolbar" ng-show="user.editMode == true && (isAdmin() || isSuperadmin())"> 
+                        <button ng-click="toggleEditMode(user)">Cancel</i> 
+                        <button ng-click="updateUser(user)">Update</i> 
+                </div> 
+            </td> 
+            <td>{{user.id}}</td> 
+            <td> 
+                <p ng-show="user.editMode == null || user.editMode == false">{{user.email}}</p> 
+                <p ng-show="user.editMode == true"><input ng-model="useredit[user.id].email" /> </p>
+            </td>
+            <td> 
+                
+                <p ng-show="user.editMode == null || user.editMode == false">{{user.password}}</p> 
+                <p ng-show="user.editMode == true"><input ng-model="useredit[user.id].password" /> </p>
+                
+            </td>
+            <td>
+                <p ng-show="user.editMode == null || user.editMode == false">{{user.user_admin == 1 ? "yes" : "no"}}</p> 
+                
+                <p><input ng-model="useredit[user.id].user_admin" ng-checked="user.user_admin == 1" type="checkbox" ng-show="user.editMode == true && isSuperadmin()" /><span ng-show="user.editMode == true && !isSuperadmin()">---</span></p>
+            </td>
+            <td class="permissions-cell">
+                <div class="user-edit-row" ng-repeat="advertiserObj in advertisers">
+                    <p class="advertiser-title">{{advertiserObj.advertiser.advertiserName}}</span>
+                    <div class="advertiser-permissions">
+                        <span ng-class="{editable: user.editMode == true, activespan : userHasMarket(user, market.marketID, advertiserObj.advertiser.advertiserID)}" ng-repeat="market in advertiserObj.markets" class="nested">
+                            <input type="checkbox" ng-checked="userHasMarket(user, market.marketID, advertiserObj.advertiser.advertiserID)" ng-model="useredit[user.id].data[advertiserObj.advertiser.advertiserID][market.marketID]" />{{market.marketName}}
+                        </span>
+                    </div>
+                </div>
+            </td> 
+        </tr> 
+    </table> 
+</div> 
