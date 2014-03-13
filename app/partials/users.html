@@ -11,6 +11,7 @@
             <th>Password</th>
             <th>Administrator</th> 
             <th>Advertisers Markets Permissions</th>
+            <th>Active Groups</th>
         </tr> 
         <tr ng-show="addMode && (isAdmin() || isSuperadmin())"  class="user-add-row"> 
             <td> 
@@ -36,6 +37,15 @@
                         </div>
                     </div>
             </td> 
+            <td>
+                <label ng-repeat="group in availableGroups">
+                  <input
+                    type="checkbox"
+                    value="{{group.name}}"
+                    ng-model="groups"
+                  > {{group.name}}
+                </label>
+            </td>
         </tr> 
         <tr class="user-edit-row" ng-repeat="user in users | orderBy:'id':true"> 
             <td> 
@@ -74,6 +84,9 @@
                     </div>
                 </div>
             </td> 
+            <td>
+                --
+            </td>
         </tr> 
     </table> 
 </div> 

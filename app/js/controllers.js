@@ -43,8 +43,8 @@ angular.module('atpcms.controllers', [])
 			return false;
 		};
 
-		if(AppstateSrv.getParam("advertisers").length == 0) {
-			//
+    	if(AppstateSrv.getParam("advertisers").length == 0) {
+        	//
 			AdvertisersSrv
 			.getAdvertisers()
 			.success(function(advData){
@@ -251,12 +251,14 @@ angular.module('atpcms.controllers', [])
 		
 		$scope.advertisers = AppstateSrv.getParam("advertisers");
 
+        $scope.availableGroups = AppstateSrv.getParam("groups");
+
 		$scope.user = {
 			email : "",
 			user_admin : false,
             password : "",
 			data : {},
-            groups : [1,2]
+            groups : []
 		};
 
 		$scope.useredit = {};
@@ -320,7 +322,7 @@ angular.module('atpcms.controllers', [])
             //return false;
 			if(model) {
 				//
-				console.log(model)
+				//console.log(model)
 				for (var userID in model) {
 	        		if(userID == user.id) {
 	        			exportuser = {
@@ -389,7 +391,7 @@ angular.module('atpcms.controllers', [])
                     };
         		};
         	};
-            //console.log(exportuser)
+            console.log(exportuser)
         	return exportuser;
         };
 
