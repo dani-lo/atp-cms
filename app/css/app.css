@@ -5,10 +5,10 @@ html {
 }
 body {
   padding : 24px;
-  background : url(assets/dynamite02.png) no-repeat center 165px;
+  background : rgba(181, 221, 22, 0.08) url(assets/dynamite02.png) no-repeat center 165px;
 }
 header {
-  padding: 12px;
+  padding: 12px 12px 12px 2px;
   position : relative;
   border: 1px solid #ddd;
 }
@@ -31,6 +31,7 @@ h2 {
   margin : 0;
   padding : 0;
 }
+
 .menu:before {
 }
 .menu:after {
@@ -44,7 +45,9 @@ h2 {
 .menu > li a{
   color: #CE5288;
   font-size: 1.4em;
-  padding: 6px;
+  padding: 10px 32px;
+  background: #eee;
+  border: 1px solid #ddd;
 }
 .menu > li:before {
   /*content: "|";*/
@@ -111,15 +114,22 @@ h1.main-title{
   margin: 0;
   text-align: center;
   font-size: 1.6em;
+  color: #1cb4e6;
 }
 h2.sub-title{
   margin: 0 0 12px;
   text-align: center;
   font-size: 1.2em;
+  color : #888;
 }
 .table-bordered {
 border: 1px solid #ddd;
 background: #fff;
 }
 
-
+input, button, select, textarea {
+  border: 1px solid #ccc;
+}
+button{
+  background : #eee;
+}

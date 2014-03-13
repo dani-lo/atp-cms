@@ -200,6 +200,10 @@ angular.module('atpcms.controllers', [])
 
         $scope.deleteGroup = function (group) { 
             //
+            if(!confirm("Are you sure you want to delete group: " + group.name + "? This action can not be undone.")){
+                return false;
+            };
+
             GroupsSrv.deleteGroup(group).success(successCallback).error(errorCallback); 
         }; 
 
@@ -440,6 +444,10 @@ angular.module('atpcms.controllers', [])
 
         $scope.deleteUser = function (user) { 
         	//
+            if(!confirm("Are you sure you want to delete user: " + user.email + "? This action can not be undone.")){
+                return false;
+            };
+            
             UsersSrv.deleteUser(user).success(successCallback).error(errorCallback); 
         }; 
 
