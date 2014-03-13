@@ -43,12 +43,12 @@ angular.module('atpcms.controllers', [])
 			return false;
 		};
 
-		if(AppstateSrv.getParam("advertisers") === null) {
+		if(AppstateSrv.getParam("advertisers").length == 0) {
 			//
 			AdvertisersSrv
 			.getAdvertisers()
 			.success(function(advData){
-				
+			
 				var apiAdvertisers = [];
 				
 				angular.forEach(advData, function(advertiser){
