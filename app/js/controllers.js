@@ -160,68 +160,57 @@ angular.module('atpcms.controllers', [])
 
         var getGroupsSuccessCallback = function (data, status) { 
             $scope.groups = data; 
-
             //prepareEditusers();
         }; 
 
         var successCallback = function (data, status, headers, config) { 
             
             toaster.pop('success', "Success", "<p>The operation was successful</p>", 2000, 'trustedHtml');
-            prepareAdduser();
-            return UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback); 
+            //prepareAdduser();
+            return GroupsSrv.getGroups().success(getGroupsSuccessCallback).error(errorCallback); 
         }; 
 
         var successPostCallback = function (data, status, headers, config) { 
             //
             successCallback(data, status, headers, config).success(function () { 
+                
                 $scope.toggleAddMode(); 
-                $scope.user = {}; 
+                
+                $scope.group = {
+                    name : ""
+                }; 
             }); 
         }; 
 
         var errorCallback = function (data, status, headers, config) { 
-            //notificationFactory.error(data.ExceptionMessage); 
-            //
-            //toaster.pop('error', "Error", "<p>There was an error, please try again</p>", 5000, 'trustedHtml');
+            toaster.pop('error', "Error", "<p>There was an error, please try again</p>", 5000, 'trustedHtml');
         }; 
 
         $scope.addGroup = function () { 
             //
-            var apiUser;
+            var group = $scope.group;
 
-            if(!validateEmail($scope.user.email)){
-                toaster.pop('error', "Error", "<p>Please enter a valid email address</p>", 2000, 'trustedHtml');
+            if(group.name == "" || group.name == null || group.length < 1){
+                toaster.pop('error', "Error", "<p>Please enter a valid group name</p>", 2000, 'trustedHtml');
                 return false;
             };
-            //console.log($scope.user)
-            //return false;   
-            apiUser = prepareUserexport($scope.user);
-            //console.log(apiUser)
-
-            UsersSrv.addUser(apiUser).success(successPostCallback).error(errorCallback); 
-            //_.delay(function(){prepareAdduser()}, 1000);
+              
+            GroupsSrv.addGroup(group).success(successPostCallback).error(errorCallback); 
         }; 
 
-        $scope.deleteGroup = function (user) { 
+        $scope.deleteGroup = function (group) { 
             //
-            UsersSrv.deleteUser(user).success(successCallback).error(errorCallback); 
+            GroupsSrv.deleteGroup(group).success(successCallback).error(errorCallback); 
         }; 
 
-        $scope.updateGroup = function (user) { 
+        $scope.updateGroup = function (group) { 
             //
-            var apiUser;
-
-            if(!validateEmail($scope.useredit[user.id].email)){
-                toaster.pop('error', "Error", "<p>Please enter a valid email address</p>", 2000, 'trustedHtml');
+            if(group.name == "" || group.name == null || group.length < 1){
+                toaster.pop('error', "Error", "<p>Please enter a valid group name</p>", 2000, 'trustedHtml');
                 return false;
             };
 
-            apiUser = prepareUserexport(user, $scope.useredit);
-
-            //console.log("PREPARED USER!!!")
-            //console.log(apiUser)
-
-            UsersSrv.updateUser(apiUser).success(successCallback).error(errorCallback); 
+            GroupsSrv.updateGroup(group).success(successCallback).error(errorCallback); 
         };
 
         $scope.isSuperadmin = function() {
@@ -243,7 +232,7 @@ angular.module('atpcms.controllers', [])
             group.editMode = !group.editMode; 
         }; 
 
-        //UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback);
+        GroupsSrv.getGroups().success(getGroupsSuccessCallback).error(errorCallback);
 
         //prepareAdduser();
     }])

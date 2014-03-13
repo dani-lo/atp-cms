@@ -5,17 +5,17 @@ html {
 }
 body {
   padding : 24px;
+  background : url(assets/dynamite02.png) no-repeat center 165px;
 }
 header {
   padding: 12px;
-  background: #eee;
   position : relative;
   border: 1px solid #ddd;
 }
 header #versioning {
   position: absolute;
   right: 12px;
-  top: 7px;
+  top: 10px;
   font-size: 12px;
   color: #aaa;
 }
@@ -32,10 +32,8 @@ h2 {
   padding : 0;
 }
 .menu:before {
-  content: "-";
 }
 .menu:after {
-  content: "-";
 }
 .menu > li {
   display: none;
@@ -44,14 +42,16 @@ h2 {
   display: inline;
 }
 .menu > li a{
-  color : #000;
+  color: #CE5288;
+  font-size: 1.4em;
+  padding: 6px;
 }
 .menu > li:before {
   /*content: "|";*/
   padding-right: 0.3em;
 }
 .menu .activetab a{
-  color : #aaa;
+  color : #758A24;
 }
 .menu > li:nth-child(1):before {
   content: "";
@@ -107,7 +107,19 @@ p.advertiser-title{
   display :none;
 }
 
-
-
+h1.main-title{
+  margin: 0;
+  text-align: center;
+  font-size: 1.6em;
+}
+h2.sub-title{
+  margin: 0 0 12px;
+  text-align: center;
+  font-size: 1.2em;
+}
+.table-bordered {
+border: 1px solid #ddd;
+background: #fff;
+}
 
 

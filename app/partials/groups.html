@@ -12,17 +12,17 @@
                 <tr ng-show="addMode && (isAdmin() || isSuperadmin())"  class="user-add-row"> 
                     <td> 
                         <div class="btn-toolbar"> 
-                                <button ng-click="addUser()">Add</button> 
+                                <button ng-click="addGroup()">Add</button> 
                         </div> 
                     </td> 
                     <td></td> 
                     <td> 
-                        <p><input ng-model="user.name" /></p>
+                        <p><input ng-model="group.name" /></p>
                     </td>
                 </tr> 
                 <tr class="user-edit-row" ng-repeat="group in groups | orderBy:'id':true"> 
-                    <td> 
-                        <div ng-show="isAdmin() || isSuperadmin()" class="btn-toolbar" ng-show="group.editMode == null || group.editMode == false"> 
+                    <td>
+                        <div ng-show="(isAdmin() || isSuperadmin()) && (group.editMode == null || group.editMode == false)" class="btn-toolbar" ng-show="group.editMode == null || group.editMode == false"> 
                             <button ng-click="toggleEditMode(group)">Edit</button> 
                             <button ng-click="deleteGroup(group)">Delete</button> 
                         </div> 
@@ -31,10 +31,10 @@
                                 <button ng-click="updateGroup(group)">Update</i> 
                         </div> 
                     </td> 
-                    <td>{{user.id}}</td> 
+                    <td>{{group.id}}</td> 
                     <td> 
                         <p ng-show="group.editMode == null || group.editMode == false">{{group.name}}</p> 
-                        <p ng-show="group.editMode == true"><input ng-model="groups[group.id].name" /> </p>
+                        <p ng-show="group.editMode == true"><input ng-model="group.name" /> </p>
                     </td>
                 </tr> 
             </table>    

@@ -39,7 +39,7 @@
         </tr> 
         <tr class="user-edit-row" ng-repeat="user in users | orderBy:'id':true"> 
             <td> 
-                <div ng-show="isAdmin() || isSuperadmin()" class="btn-toolbar" ng-show="user.editMode == null || user.editMode == false"> 
+                <div ng-show="(isAdmin() || isSuperadmin()) && (user.editMode == null || user.editMode == false)" class="btn-toolbar" ng-show="user.editMode == null || user.editMode == false"> 
                     <button ng-click="toggleEditMode(user)">Edit</button> 
                     <button ng-click="deleteUser(user)">Delete</button> 
                 </div> 
