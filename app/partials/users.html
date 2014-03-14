@@ -37,12 +37,12 @@
                         </div>
                     </div>
             </td> 
-            <td>
+            <td class="permissions-cell">
                 <label ng-repeat="group in availableGroups">
                   <input
                     type="checkbox"
                     value="{{group.name}}"
-                    ng-model="groups"
+                    ng-model="user.groups[group.id]"
                   > {{group.name}}
                 </label>
             </td>
@@ -85,7 +85,18 @@
                 </div>
             </td> 
             <td>
-                --
+
+                <div class="advertiser-permissions">
+                    <span ng-class="{editable: user.editMode == true, activespan : userHasGroup(user, group.id)}" 
+                          ng-repeat="group in availableGroups" class="nested">
+                        <input
+                            type="checkbox"
+                            value="{{group.name}}"
+                            ng-checked="userHasGroup(user, group.id)"
+                            ng-model="user.groups[group.id]"> {{group.name}}
+                    </span>
+                    </div>
+                
             </td>
         </tr> 
     </table> 

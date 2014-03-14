@@ -258,7 +258,7 @@ angular.module('atpcms.controllers', [])
 			user_admin : false,
             password : "",
 			data : {},
-            groups : []
+            groups : {}
 		};
 
 		$scope.useredit = {};
@@ -277,7 +277,8 @@ angular.module('atpcms.controllers', [])
         			data : {},
         			email : user.email,
         			user_admin : user.user_admin,
-                    password : user.password
+                    password : user.password,
+                    groups : {}
         		};
 
         		angular.forEach($scope.advertisers, function(advertiserObj){
@@ -296,7 +297,17 @@ angular.module('atpcms.controllers', [])
 
         			});
         		});
+
+                angular.forEach($scope.availableGroups, function(group){
+                    //
+                    if(_.indexOf(user.groups, group.id) !== -1){
+                        $scope.useredit[user.id].groups[group.id] = true;
+                    } else {
+                        $scope.useredit[user.id].groups[group.id] = false;
+                    }
+                });
         	});
+            console.log($scope.useredit)
         };
 
         var prepareAdduser = function() {
@@ -312,13 +323,18 @@ angular.module('atpcms.controllers', [])
     				$scope.user.data[advertiserObj.advertiser.advertiserID][marketId] = false;
     			});
     		});
+
+            angular.forEach($scope.availableGroups, function(groupObj){
+                
+                $scope.user.groups[groupObj.id] = false;
+            });
     	};
 
     	var prepareUserexport = function(user, model){
 
         	var exportuser = {},
 				permissionscopy = {};
-            //console.log($scope.user.data)
+            console.log(model)
             //return false;
 			if(model) {
 				//
@@ -330,7 +346,8 @@ angular.module('atpcms.controllers', [])
 	        				data : model[userID].data,
 	        				email : model[userID].email,
                             password : model[userID].password,
-	        				user_admin : model[userID].user_admin ? "1" : "0"
+	        				user_admin : model[userID].user_admin ? "1" : "0",
+                            groups : model[userID].groups
 	        			};
 
 	        			exportuser.id = user.id;
@@ -391,7 +408,26 @@ angular.module('atpcms.controllers', [])
                     };
         		};
         	};
+            
+            var tmpgroups = _.clone(exportuser.groups);
+
+            if(!model){
+                $scope.user.groups = tmpgroups;
+            };
+
+            console.log(tmpgroups)
+
+            exportuser.groups = [];
+
+            for(var groupObj in tmpgroups) {
+                //
+                if(tmpgroups[groupObj] == true){
+                    exportuser.groups.push(groupObj);
+                };
+            };
+
             console.log(exportuser)
+
         	return exportuser;
         };
 
@@ -438,6 +474,7 @@ angular.module('atpcms.controllers', [])
             //console.log($scope.user)
             //return false;   
         	apiUser = prepareUserexport($scope.user);
+            //return false;
             //console.log(apiUser)
 
             UsersSrv.addUser(apiUser).success(successPostCallback).error(errorCallback); 
@@ -468,6 +505,15 @@ angular.module('atpcms.controllers', [])
             //console.log(apiUser)
 
             UsersSrv.updateUser(apiUser).success(successCallback).error(errorCallback); 
+        };
+
+        $scope.userHasGroup= function(user, group){
+            //
+            //console.log("------------------")
+            //console.log(user)
+            //console.log(group)
+            //console.log()
+            return _.indexOf(user.groups, group) !== -1;
         };
 
         $scope.userHasMarket = function(user, checkMarket, parentAdvertiser) {
