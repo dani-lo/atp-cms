@@ -307,7 +307,7 @@ angular.module('atpcms.controllers', [])
                     }
                 });
         	});
-            console.log($scope.useredit)
+            //console.log($scope.useredit)
         };
 
         var prepareAdduser = function() {
@@ -334,7 +334,8 @@ angular.module('atpcms.controllers', [])
 
         	var exportuser = {},
 				permissionscopy = {};
-            console.log(model)
+            
+            //console.log(model)
             //return false;
 			if(model) {
 				//
@@ -409,26 +410,41 @@ angular.module('atpcms.controllers', [])
         		};
         	};
             
-            var tmpgroups = _.clone(exportuser.groups);
+            var tmpgroups = _.clone(exportuser.groups),exportgroups = [];
+
+            //delete exportuser.groups;
+
+            //exportuser.groups = [];
+
+            //console.log(exportuser.groups)
 
             if(!model){
                 $scope.user.groups = tmpgroups;
             };
 
-            console.log(tmpgroups)
+            //console.log(tmpgroups)
 
-            exportuser.groups = [];
-
+            //console.log("------------------ starting to loop the groups to build array ...")
             for(var groupObj in tmpgroups) {
                 //
+                //console.log(groupObj)
+                //console.log(tmpgroups[groupObj])
                 if(tmpgroups[groupObj] == true){
-                    exportuser.groups.push(groupObj);
-                };
+                    //console.log("PUSH")
+                    exportgroups.push(groupObj);
+                } else {
+                    //console.log("SKIP")
+                }
             };
 
-            console.log(exportuser)
+            exportuser.groups = exportgroups;
+            //console.log(exportuser)
 
         	return exportuser;
+        };
+
+        var reduceGroupsToAdmin = function(groups) {
+
         };
 
         var validateEmail = function(email) { 
