@@ -337,11 +337,15 @@ angular.module('atpcms.controllers', [])
             
             //console.log(model)
             //return false;
-			if(model) {
+			if(model) { 
+                // case :: Edit user
 				//
+                //console.log("usin model ------")
 				//console.log(model)
 				for (var userID in model) {
 	        		if(userID == user.id) {
+                        //console.log("found user ...")
+                        //console.log(model[userID])
 	        			exportuser = {
 	        				id : userID,
 	        				data : model[userID].data,
@@ -357,13 +361,17 @@ angular.module('atpcms.controllers', [])
 	        		};
 	        	};
 			} else {
+                //console.log("not usin model ------")
 				exportuser = user;
+                //console.log(user)
 				permissionscopy = _.clone(user.data);
                 //
 
                 //console.log(exportuser)
             //return false;
 			};
+            //console.log(exportuser)
+            //return false;
 
         	for(var advID in exportuser.data){
         		
@@ -436,6 +444,9 @@ angular.module('atpcms.controllers', [])
                     //console.log("SKIP")
                 }
             };
+            if(!exportuser.password || exportuser.password == ""){
+                delete exportuser.password;
+            };
 
             exportuser.groups = exportgroups;
             //console.log(exportuser)
@@ -461,13 +472,14 @@ angular.module('atpcms.controllers', [])
         var successCallback = function (data, status, headers, config) { 
             
             toaster.pop('success', "Success", "<p>The operation was successful</p>", 2000, 'trustedHtml');
-            prepareAdduser();
+            
             return UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback); 
         }; 
 
         var successPostCallback = function (data, status, headers, config) { 
         	//
-            successCallback(data, status, headers, config).success(function () { 
+            successCallback(data, status, headers, config).success(function () {
+                prepareAdduser();
                 $scope.toggleAddMode(); 
                 $scope.user = {}; 
             }); 
