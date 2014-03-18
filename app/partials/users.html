@@ -1,6 +1,7 @@
 <h2>Users Operations</h2>
 <!--<p>This is the atp cms for users management.</p>-->
 <div ng-controller="UsersCtrl" ng-cloak> 
+    <div ng-show="loading" class="loading"><span>LOADING...</span></div>
     <table class="table table-striped table-bordered table-condensed table-hover"> 
         <tr> 
             <th style="width: 100px;"> 
@@ -29,7 +30,7 @@
             <td>
                 <p><input ng-class="{nonvisible: !isSuperadmin()}" ng-model="user.user_admin" type="checkbox" /><span  ng-class="{nonvisible: isSuperadmin()}" >--</span></p>
             </td>
-            <td class="permissions-cell">
+            <td class="permissions-cell advertisers-premissions">
                     <div ng-repeat="advertiserObj in advertisers">
                         <p  class="advertiser-title">{{advertiserObj.advertiser.advertiserName}}</p>
                         <div class="advertiser-permissions">
@@ -37,8 +38,8 @@
                         </div>
                     </div>
             </td> 
-            <td class="permissions-cell">
-                <label ng-repeat="group in availableGroups">
+            <td class="permissions-cell groups-premissions">
+                <label ng-repeat="group in availableGroups" class="advertiser-title">
                   <input
                     type="checkbox"
                     value="{{group.name}}"
@@ -74,7 +75,7 @@
                 
                 <p><input ng-model="useredit[user.id].user_admin" ng-checked="user.user_admin == 1" type="checkbox" ng-show="user.editMode == true && isSuperadmin()" /><span ng-show="user.editMode == true && !isSuperadmin()">---</span></p>
             </td>
-            <td class="permissions-cell">
+            <td class="permissions-cell advertisers-premissions">
                 <div class="user-edit-row" ng-repeat="advertiserObj in advertisers">
                     <p class="advertiser-title">{{advertiserObj.advertiser.advertiserName}}</span>
                     <div class="advertiser-permissions">
@@ -84,15 +85,16 @@
                     </div>
                 </div>
             </td> 
-            <td>
-                <div class="advertiser-permissions">
-                    <span ng-class="{editable: user.editMode == true, activespan : userHasGroup(user, group.id)}" 
-                          ng-repeat="group in availableGroups" class="nested">
+            <td class="permissions-cell groups-premissions">
+                <div class="groups-permissions">
+                    <span ng-class="{editable: user.editMode == true, activespan : userHasGroup(user, group.id) || user.super_admin == '1'}" 
+                          ng-repeat="group in availableGroups" class="nested advertiser-title">
                         <input
                             type="checkbox"
                             value="{{group.name}}"
-                            ng-checked="userHasGroup(user, group.id)"
-                            ng-model="useredit[user.id].groups[group.id]"> {{group.name}}
+                            ng-checked="userHasGroup(user, group.id) || user.super_admin"
+                            ng-model="useredit[user.id].groups[group.id]"
+                            > {{group.name}}
                     </span>
                     </div>
                 

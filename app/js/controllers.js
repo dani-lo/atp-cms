@@ -43,12 +43,33 @@ angular.module('atpcms.controllers', [])
 			return false;
 		};
 
+        $scope.loading = false;
+
+        var loaders = 0,
+            addLoader = function(){
+                loaders++;
+                $scope.loading = true;
+            },
+            removeLoader = function(){
+                if(loaders > 0){
+                    loaders--;
+                };
+                if(loaders === 0){
+                    $scope.loading = false;
+                };
+            };
+
+
     	if(AppstateSrv.getParam("advertisers").length == 0) {
         	//
+            addLoader();
+
 			AdvertisersSrv
 			.getAdvertisers()
 			.success(function(advData){
-			
+			     
+                removeLoader();
+
 				var apiAdvertisers = [];
 				
 				angular.forEach(advData, function(advertiser){
@@ -77,10 +98,16 @@ angular.module('atpcms.controllers', [])
 			});
 		};
         //
+        addLoader();
+
         GroupsSrv.getGroups().success(function(groupsData){
+            
+            removeLoader();
             //
             AppstateSrv.setParam("groups", groupsData);
         }).error(function(){
+
+            removeLoader();
             alert("error fetching groups")
         });
 	}])
@@ -110,9 +137,13 @@ angular.module('atpcms.controllers', [])
 			toaster.pop('success', "success", '<p>Your login was successful</p>', 2000, 'trustedHtml');
 
             AppstateSrv.setParam('advspermitted', data.advertisers);
-			AppstateSrv.setParam('loggedin', true);
-			AppstateSrv.setParam('sid', data.sid);
+			
+            AppstateSrv.setParam('loggedin', true);
+			
+            AppstateSrv.setParam('sid', data.sid);
+            
             AppstateSrv.setParam('admin',  data.admin === "1" ? true : false);
+            
             AppstateSrv.setParam('superadmin', data.super_admin === "1" ? true : false);
             
 			$location.path("home");
@@ -158,8 +189,31 @@ angular.module('atpcms.controllers', [])
 
         $scope.addMode = true; 
 
+        $scope.loading = false;
+
+        var loaders = 0,
+            addLoader = function(){
+                //console.log("ADD LOADER")
+                loaders++;
+                $scope.loading = true;
+            },
+            removeLoader = function(){
+                //console.log("REMOVE LOADER")
+                if(loaders > 0){
+                    loaders--;
+                };
+                if(loaders === 0){
+                    $scope.loading = false;
+                };
+            };
+
         var getGroupsSuccessCallback = function (data, status) { 
+            
             $scope.groups = data; 
+
+            removeLoader();
+
+            AppstateSrv.setParam("groups", data);
             //prepareEditusers();
         }; 
 
@@ -179,10 +233,14 @@ angular.module('atpcms.controllers', [])
                 $scope.group = {
                     name : ""
                 }; 
+                //
             }); 
         }; 
 
         var errorCallback = function (data, status, headers, config) { 
+            
+            removeLoader();
+
             toaster.pop('error', "Error", "<p>There was an error, please try again</p>", 5000, 'trustedHtml');
         }; 
 
@@ -194,7 +252,9 @@ angular.module('atpcms.controllers', [])
                 toaster.pop('error', "Error", "<p>Please enter a valid group name</p>", 2000, 'trustedHtml');
                 return false;
             };
-              
+            
+            addLoader();
+        
             GroupsSrv.addGroup(group).success(successPostCallback).error(errorCallback); 
         }; 
 
@@ -204,6 +264,8 @@ angular.module('atpcms.controllers', [])
                 return false;
             };
 
+            addLoader();
+        
             GroupsSrv.deleteGroup(group).success(successCallback).error(errorCallback); 
         }; 
 
@@ -214,6 +276,8 @@ angular.module('atpcms.controllers', [])
                 return false;
             };
 
+            addLoader();
+        
             GroupsSrv.updateGroup(group).success(successCallback).error(errorCallback); 
         };
 
@@ -236,6 +300,8 @@ angular.module('atpcms.controllers', [])
             group.editMode = !group.editMode; 
         }; 
 
+        addLoader();
+
         GroupsSrv.getGroups().success(getGroupsSuccessCallback).error(errorCallback);
 
         //prepareAdduser();
@@ -250,22 +316,35 @@ angular.module('atpcms.controllers', [])
 		};
 		
 		$scope.advertisers = AppstateSrv.getParam("advertisers");
-
         $scope.availableGroups = AppstateSrv.getParam("groups");
-
-		$scope.user = {
-			email : "",
-			user_admin : false,
-            password : "",
-			data : {},
-            groups : {}
-		};
-
 		$scope.useredit = {};
-
 		$scope.users = [];
-
         $scope.addMode = true; 
+        $scope.user = {
+            email : "",
+            user_admin : false,
+            password : "",
+            data : {},
+            groups : {}
+        };
+        $scope.loading = false;
+
+        var loaders = 0,
+            addLoader = function(){
+                //console.log("ADD LOADER")
+                loaders++;
+                $scope.loading = true;
+            },
+            removeLoader = function(){
+                //console.log("REMOVE LOADER")
+                if(loaders > 0){
+                    loaders--;
+                };
+                if(loaders === 0){
+                    $scope.loading = false;
+                };
+            };
+
 
         var prepareEditusers = function() {
 
@@ -277,6 +356,7 @@ angular.module('atpcms.controllers', [])
         			data : {},
         			email : user.email,
         			user_admin : user.user_admin,
+                    super_admin : user.super_admin,
                     password : user.password,
                     groups : {}
         		};
@@ -300,17 +380,26 @@ angular.module('atpcms.controllers', [])
 
                 angular.forEach($scope.availableGroups, function(group){
                     //
-                    if(_.indexOf(user.groups, group.id) !== -1){
+                    if(_.indexOf(user.groups, group.id) !== -1 || user.super_admin == 1){
                         $scope.useredit[user.id].groups[group.id] = true;
                     } else {
                         $scope.useredit[user.id].groups[group.id] = false;
                     }
                 });
         	});
-            //console.log($scope.useredit)
         };
 
         var prepareAdduser = function() {
+
+            delete $scope.user;
+
+            $scope.user = {
+                email : "",
+                user_admin : false,
+                password : "",
+                data : {},
+                groups : {}
+            };
 
     		angular.forEach($scope.advertisers, function(advertiserObj){
     			
@@ -335,13 +424,8 @@ angular.module('atpcms.controllers', [])
         	var exportuser = {},
 				permissionscopy = {};
             
-            //console.log(model)
-            //return false;
 			if(model) { 
                 // case :: Edit user
-				//
-                //console.log("usin model ------")
-				//console.log(model)
 				for (var userID in model) {
 	        		if(userID == user.id) {
                         //console.log("found user ...")
@@ -361,18 +445,11 @@ angular.module('atpcms.controllers', [])
 	        		};
 	        	};
 			} else {
-                //console.log("not usin model ------")
+                // case :: Add user
 				exportuser = user;
-                //console.log(user)
 				permissionscopy = _.clone(user.data);
-                //
-
-                //console.log(exportuser)
-            //return false;
 			};
-            //console.log(exportuser)
-            //return false;
-
+            
         	for(var advID in exportuser.data){
         		
         		var hasAllMarkets = true, apimarkets = [];
@@ -420,28 +497,16 @@ angular.module('atpcms.controllers', [])
             
             var tmpgroups = _.clone(exportuser.groups),exportgroups = [];
 
-            //delete exportuser.groups;
-
-            //exportuser.groups = [];
-
-            //console.log(exportuser.groups)
-
             if(!model){
                 $scope.user.groups = tmpgroups;
             };
 
-            //console.log(tmpgroups)
-
-            //console.log("------------------ starting to loop the groups to build array ...")
             for(var groupObj in tmpgroups) {
                 //
-                //console.log(groupObj)
-                //console.log(tmpgroups[groupObj])
                 if(tmpgroups[groupObj] == true){
-                    //console.log("PUSH")
                     exportgroups.push(groupObj);
                 } else {
-                    //console.log("SKIP")
+                    //
                 }
             };
             if(!exportuser.password || exportuser.password == ""){
@@ -449,7 +514,6 @@ angular.module('atpcms.controllers', [])
             };
 
             exportuser.groups = exportgroups;
-            //console.log(exportuser)
 
         	return exportuser;
         };
@@ -464,7 +528,10 @@ angular.module('atpcms.controllers', [])
 		} 
 
         var getUsersSuccessCallback = function (data, status) { 
+            
             $scope.users = data; 
+
+            removeLoader();
 
             prepareEditusers();
         }; 
@@ -479,15 +546,14 @@ angular.module('atpcms.controllers', [])
         var successPostCallback = function (data, status, headers, config) { 
         	//
             successCallback(data, status, headers, config).success(function () {
+                
                 prepareAdduser();
-                $scope.toggleAddMode(); 
-                $scope.user = {}; 
             }); 
         }; 
 
         var errorCallback = function (data, status, headers, config) { 
-            //notificationFactory.error(data.ExceptionMessage); 
             //
+            removeLoader();
             //toaster.pop('error', "Error", "<p>There was an error, please try again</p>", 5000, 'trustedHtml');
         }; 
 
@@ -499,14 +565,12 @@ angular.module('atpcms.controllers', [])
         		toaster.pop('error', "Error", "<p>Please enter a valid email address</p>", 2000, 'trustedHtml');
         		return false;
         	};
-            //console.log($scope.user)
-            //return false;   
+             
         	apiUser = prepareUserexport($scope.user);
-            //return false;
-            //console.log(apiUser)
+
+            addLoader();
 
             UsersSrv.addUser(apiUser).success(successPostCallback).error(errorCallback); 
-           	//_.delay(function(){prepareAdduser()}, 1000);
         }; 
 
         $scope.deleteUser = function (user) { 
@@ -515,6 +579,8 @@ angular.module('atpcms.controllers', [])
                 return false;
             };
             
+            addLoader();
+
             UsersSrv.deleteUser(user).success(successCallback).error(errorCallback); 
         }; 
 
@@ -527,20 +593,15 @@ angular.module('atpcms.controllers', [])
         		return false;
         	};
 
-        	apiUser = prepareUserexport(user, $scope.useredit);
+            addLoader();
 
-            //console.log("PREPARED USER!!!")
-            //console.log(apiUser)
+        	apiUser = prepareUserexport(user, $scope.useredit);
 
             UsersSrv.updateUser(apiUser).success(successCallback).error(errorCallback); 
         };
 
         $scope.userHasGroup= function(user, group){
             //
-            //console.log("------------------")
-            //console.log(user)
-            //console.log(group)
-            //console.log()
             return _.indexOf(user.groups, group) !== -1;
         };
 
@@ -589,6 +650,8 @@ angular.module('atpcms.controllers', [])
 
             user.editMode = !user.editMode; 
         }; 
+
+        addLoader();
 
         UsersSrv.getUsers().success(getUsersSuccessCallback).error(errorCallback);
 

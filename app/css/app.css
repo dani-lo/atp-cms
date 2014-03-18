@@ -5,12 +5,15 @@ html {
 }
 body {
   padding : 24px;
-  background : rgba(181, 221, 22, 0.08) url(assets/dynamite02.png) no-repeat center 165px;
+  /*background : rgba(181, 221, 22, 0.08) url(assets/dynamite02.png) no-repeat center 165px;*/
+  font-size : 12px;
 }
 header {
   padding: 12px 12px 12px 2px;
-  position : relative;
+  position: relative;
+  z-index: 1;
   border: 1px solid #ddd;
+  background: #FFF;
 }
 header #versioning {
   position: absolute;
@@ -75,7 +78,7 @@ td button {
     margin : 0;
 }
 .user-edit-row span {
-  
+  color: #aaa;
   text-decoration: line-through;
 }
 .user-edit-row span.editable {
@@ -88,6 +91,7 @@ td button {
   display: inline;
 }
 .user-edit-row span.activespan {
+  color: #000;
   text-decoration: none;
   font-weight : bold;
 }
@@ -102,7 +106,7 @@ td button {
   margin-left: 0;
 }
 tr.user-add-row{
-  background : #eee;
+  background : #F3EFE5;
 }
 p.advertiser-title{
   margin-bottom: 2px;
@@ -133,4 +137,50 @@ input, button, select, textarea {
 }
 button{
   background : #eee;
+}
+label {
+display: inline;
+
+font-weight: normal;
+}
+.groups-permissions span,  .permissions-cell label{
+  margin-left: 6px;
+}
+.advertiser-title{
+  color:#1A77AC;
+}
+.groups-permissions span{
+  color:#aaa;
+}
+.groups-permissions span.activespan{
+  color:#1A77AC;
+}
+.loading {
+  background: rgba(89, 133, 145, 0.6);
+  position: fixed;
+  z-index: 3;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.loading span{
+  display: block;
+  font-size: 24px;
+  margin-top: 80px;
+  text-align: center;
+  color:#fff;
+}
+img.atp-bg{
+  position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+z-index: 0;
+height: 100%;
+opacity: 0.5;
+}
+div.appwrap{
+  position: relative;
+  z-index: 2;
 }
